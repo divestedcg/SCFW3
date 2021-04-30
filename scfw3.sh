@@ -14,8 +14,9 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#XXX: TODO: Fix out-of-memory under SELinux. dontaudit NETFILTER_CFG nft_register_rule on ipset import?
 #TODO: Fix IPv6 support (it uses even more memory)
-#XXX: TODO: Fix out-of-memory under SELinux enabled. dontaudit NETFILTER_CFG nft_register_rule on ipset import?
+#TODO: Make lists more dynamic
 
 createWorkDirectory() {
 	mkdir /tmp/scfw3 &>/dev/null || true;
@@ -61,8 +62,10 @@ loadLists() {
 
 	#Download and import the lists
 	importListToFirewall "firehol_level1" "https://iplists.firehol.org/files/firehol_level1.netset";
-	importListToFirewall "firehol_level2" "https://iplists.firehol.org/files/firehol_level2.netset";
-	importListToFirewall "firehol_level3" "https://iplists.firehol.org/files/firehol_level3.netset";
+	#XXX: Enabling the below lists will likely kill your system and lock you out.
+	#	be prepared to be able to mount and rm -rf /etc/firewalld/ipsets
+	#importListToFirewall "firehol_level2" "https://iplists.firehol.org/files/firehol_level2.netset";
+	#importListToFirewall "firehol_level3" "https://iplists.firehol.org/files/firehol_level3.netset";
 	#importListToFirewall "firehol_level4" "https://iplists.firehol.org/files/firehol_level4.netset";
 	#importListToFirewall "firehol_webserver" "https://iplists.firehol.org/files/firehol_webserver.netset";
 
@@ -73,12 +76,21 @@ loadLists() {
 
 	#Reload to apply
 	firewall-cmd --reload;
+	echo "[SCFW3] Loaded";
 }
 
 clearLists() {
+	firewall-cmd --delete-ipset="firehol_level1" &>/dev/null || true;
+	firewall-cmd --delete-ipset="firehol_level2" &>/dev/null || true;
+	firewall-cmd --delete-ipset="firehol_level3" &>/dev/null || true;
+	firewall-cmd --delete-ipset="firehol_level4" &>/dev/null || true;
+	firewall-cmd --delete-ipset="firehol_webserver" &>/dev/null || true;
 	firewall-cmd --permanent --delete-ipset="firehol_level1" &>/dev/null || true;
 	firewall-cmd --permanent --delete-ipset="firehol_level2" &>/dev/null || true;
 	firewall-cmd --permanent --delete-ipset="firehol_level3" &>/dev/null || true;
+	firewall-cmd --permanent --delete-ipset="firehol_level4" &>/dev/null || true;
+	firewall-cmd --permanent --delete-ipset="firehol_webserver" &>/dev/null || true;
+	echo "[SCFW3] Unloaded";
 }
 
 if [ "$1" = "enable" ]; then loadLists; fi;
