@@ -14,13 +14,13 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#XXX: TODO: Fix out-of-memory under SELinux. dontaudit NETFILTER_CFG nft_register_rule on ipset import?
 #TODO: Enable IPv6 support (it uses even more memory)
 
 blockedLists=('firehol_level1');
-#blockedLists+=('firehol_level2' 'firehol_level3');
+blockedLists+=('firehol_level2' 'firehol_level3');
 #blockedLists+=('firehol_level4');
-blockedLists+=('firehol_webserver' 'firehol_webclient');
+#blockedLists+=('firehol_webserver');
+#blockedLists+=('firehol_webclient');
 #blockedLists+=('firehol_anonymous');
 blockedCountries=();
 #blockedCountries+=('cn' 'us' 'ru');
@@ -56,6 +56,7 @@ importCountryList() {
 }
 
 removeAllowedEntries() {
+	#TODO: Concat them all and perform in one pass
 	for allow in "${allowList[@]}"
 	do
 		awk -i inplace "$allow" "$1";

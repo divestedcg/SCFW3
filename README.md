@@ -14,9 +14,7 @@ Use
 
 Known Issues
 ------------
-- Large lists *will* OOM the system. Cause is unknown, maybe firewalld, libnftables, or SELinux policy.
- - Boot a recovery disk and `$ rm -rf /etc/firewalld/ipsets`
- - Related: https://github.com/firewalld/firewalld/issues/738
+- You must set FirewallBackend to iptables, see https://github.com/firewalld/firewalld/issues/738
 
 Credits
 -------
