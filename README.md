@@ -20,3 +20,7 @@ Credits
 -------
 - FireHOL for the blocklists: https://iplists.firehol.org
 - IPdeny for the country lists: https://ipdeny.com
+
+Donate
+-------
+BTC: bc1qkjtp2k7cc4kuv8k9wjdlxkeuqczenrpv5mwasl
