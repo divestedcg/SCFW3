@@ -1,5 +1,5 @@
 #!/bin/bash
-#Copyright (c) 2021 Divested Computing Group
+#Copyright (c) 2021-2023 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -14,10 +14,11 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#TODO: Enable IPv6 support (it uses even more memory)
+#TODO: Enable IPv6 support
 
 blockedLists=('firehol_level1');
-blockedLists+=('firehol_level2' 'firehol_level3');
+blockedLists+=('firehol_level2');
+blockedLists+=('firehol_level3');
 #blockedLists+=('firehol_level4');
 #blockedLists+=('firehol_webserver');
 #blockedLists+=('firehol_webclient');
@@ -71,8 +72,8 @@ loadLists() {
 	createWorkDirectory;
 
 	#Setup the zone
-	firewall-cmd --new-zone=scfw --permanent;
-	firewall-cmd --zone=scfw --set-target=DROP --permanent
+	firewall-cmd --new-zone=scfw --permanent || true;
+	firewall-cmd --zone=scfw --set-target=DROP --permanent;
 
 	for list in "${blockedLists[@]}"
 	do
@@ -102,7 +103,7 @@ clearLists() {
 	done;
 
 	#Delete the zone
-	firewall-cmd --delete-zone=scfw --permanent;
+	firewall-cmd --delete-zone=scfw --permanent || true;
 
 	#Reload to apply
 	firewall-cmd --reload;
@@ -117,5 +118,5 @@ elif [ "$1" = "enableforce" ]; then
 elif [ "$1" = "disable" ]; then
 	clearLists;
 else
-	echo "Options are: enable, disable";
+	echo "Options are: enable, enableforce, disable";
 fi;
