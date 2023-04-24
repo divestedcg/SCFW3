@@ -11,10 +11,11 @@ Use
 - Choose the lists you want enabled at the top of scfw3.sh
 - `$ sudo sh scfw3.sh enable`
 - `$ sudo sh scfw3.sh disable`
+- Or place in /etc/cron.daily/0scfw with bottom bits edited to enableforce
 
 Known Issues
 ------------
-- You must set FirewallBackend to iptables, see https://github.com/firewalld/firewalld/issues/738
+- You must set FirewallBackend to iptables for firewalld <1.3.1, see https://github.com/firewalld/firewalld/issues/738
 
 Credits
 -------

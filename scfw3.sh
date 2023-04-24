@@ -43,7 +43,7 @@ importListToFirewall() {
 	firewall-cmd --permanent --delete-ipset="$name" &>/dev/null || true;
 	firewall-cmd --permanent --new-ipset="$name" --type=hash:net --option=maxelem=200000 --option=hashsize=16384 $inet;
 	firewall-cmd --permanent --ipset="$name" --add-entries-from-file="$name".ipset;
-	firewall-cmd --permanent --zone=drop --add-source=ipset:"$name";
+	firewall-cmd --permanent --zone=scfw --add-source=ipset:"$name";
 	unset inet;
 	sleep 2;
 }
@@ -64,8 +64,15 @@ removeAllowedEntries() {
 }
 
 loadLists() {
+	#Remove old lists+zone
+	clearLists;
+
 	#Create the needed directories
 	createWorkDirectory;
+
+	#Setup the zone
+	firewall-cmd --new-zone=scfw --permanent;
+	firewall-cmd --zone=scfw --set-target=DROP --permanent
 
 	for list in "${blockedLists[@]}"
 	do
@@ -94,6 +101,11 @@ clearLists() {
 		firewall-cmd --permanent --delete-ipset="country-block-v6-$list" &>/dev/null || true;
 	done;
 
+	#Delete the zone
+	firewall-cmd --delete-zone=scfw --permanent;
+
+	#Reload to apply
+	firewall-cmd --reload;
 	echo "[SCFW3] Unloaded";
 }
 
