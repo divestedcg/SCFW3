@@ -15,7 +15,7 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #Known bad, some sourced from BlockBotAddon (3-clause BSD license): https://git.friendi.ca/friendica/friendica-addons/src/branch/develop/blockbot/blockbot.php
-badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr.com" "Datanyze" "Dataprovider.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo.com-Bot/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence.com" "LivelapBot/" "ltx71" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex.ru/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "wpif" "XoviOnpageCrawler;" "YaK/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
+badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr.com" "Datanyze" "Dataprovider.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence.com" "LivelapBot/" "ltx71" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex.ru/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "wpif" "XoviOnpageCrawler;" "YaK/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
 
 #"All" bots
 #badStrings+=("bot/" "bot;");
@@ -24,7 +24,7 @@ badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Cli
 #badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "Google-SearchByImage" "https://developers.google.com/+/web/snippet/" "MojeekBot/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
 
 #Social Media
-#badStrings+=("Akkoma" "facebookexternalhit/" "github-camo" "Mastodon/" "Pleroma" "SkypeUriPreview Preview/" "Synapse" "TelegramBot" "Twitterbot/" "WhatsApp/" "XenForo/");
+#badStrings+=("Akkoma" "facebookexternalhit/" "github-camo" "Mastodon/" "matrix-media-repo" "Pleroma " "SkypeUriPreview Preview/" "Synapse " "TelegramBot" "Twitterbot/" "WhatsApp/" "XenForo/");
 
 #Archival
 #badStrings+=("archive.org_bot" "ArchiveTeam ArchiveBot/" "CCBot/" "Crawling at Home Project");
@@ -54,7 +54,8 @@ badStrings+=("cpuminer/" "MinerName/" "XMRig/");
 badStrings+=("Trident/");
 
 #Other
-badStrings+=("Mozilla/4.0");
+badStrings+=(" .NET CLR ");
+badStrings+=("Mozilla/4.0" " \"Mozilla/5.0\"$");
 
 #Outdated macOS, https://endoflife.date/macos
 for version in {1..13}
