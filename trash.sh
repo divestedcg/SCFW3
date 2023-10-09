@@ -15,22 +15,25 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #Known bad, some sourced from BlockBotAddon (3-clause BSD license): https://git.friendi.ca/friendica/friendica-addons/src/branch/develop/blockbot/blockbot.php
-badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr.com" "Datanyze" "Dataprovider.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence.com" "LivelapBot/" "ltx71" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex.ru/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "wpif" "XoviOnpageCrawler;" "YaK/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
+badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr.com" "Datanyze" "Dataprovider.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence.com" "LivelapBot/" "ltx71" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex.ru/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "wpif" "XoviOnpageCrawler;" "YaK/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
+
+badStrings+=(" \"Magellan\"$" " \"undici\"$");
 
 #"All" bots
 #badStrings+=("bot/" "bot;");
 
 #Search Engines
-#badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "Google-SearchByImage" "https://developers.google.com/+/web/snippet/" "MojeekBot/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
+#badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "coccocbot-image/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "Google-SearchByImage" "https://developers.google.com/+/web/snippet/" "MojeekBot/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
 
 #Social Media
-#badStrings+=("Akkoma" "facebookexternalhit/" "github-camo" "Mastodon/" "matrix-media-repo" "Pleroma " "SkypeUriPreview Preview/" "Synapse " "TelegramBot" "Twitterbot/" "WhatsApp/" "XenForo/");
+#badStrings+=("Akkoma" "facebookexternalhit/" "Friendica" "github-camo" "Mastodon/" "matrix-media-repo" "Pleroma " "SkypeUriPreview Preview/" "Synapse " "TelegramBot" "Twitterbot/" "WhatsApp/" "XenForo/");
 
 #Archival
 #badStrings+=("archive.org_bot" "ArchiveTeam ArchiveBot/" "CCBot/" "Crawling at Home Project");
 
 #Monitors
-#badStrings+=("urlwatch/");
+#badStrings+=("huginn/huginn" "urlwatch/");
+#badStrings+=("hstspreload-bot");
 
 #Readers
 #badStrings+=("Tiny Tiny RSS/" "android:com.laurencedawson.reddit_sync");
@@ -38,17 +41,19 @@ badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Cli
 #Generic
 #badStrings+=("curl/" "uclient-fetch" "wget/");
 #badStrings+=("Dart/" "Ktor client" "okhttp/");
-badStrings+=("aiohttp/" "analytics" "apache-httpclient/" "crawler" "go-http-client/" "Google-Apps-Script; beanserver;" "headless" "HeadlessChrome" "httpunit" "httrack" "libwww-perl/" "PhantomJS/" "php-curl-class/" "powershell/" "python-requests/" "python-urllib/" "scraper" "selenium" "sindresorhus/got" "spider" "webdriver");
+#badStrings+=("CFNetwork/"); #TODO: check more
+badStrings+=("aiohttp/" "analytics" "apache-httpclient/" "crawler" "go-http-client/" "Google-Apps-Script; beanserver;" "headless" "HeadlessChrome" "httpunit" "httrack" "libwww-perl/" "PhantomJS/" "php-curl-class/" "powershell/" "python-requests/" "python-urllib/" "python-urllib3/" "scraper" "selenium" "sindresorhus/got" "spider" "webdriver");
 
 #Unset UA
 badStrings+=(" \"-\"$");
 
 #Security Scanners
-badStrings+=("CensysInspect" "Nmap Scripting Engine;" "paloaltonetwork");
+badStrings+=("CensysInspect/" "Nmap Scripting Engine;" "paloaltonetwork");
 
 #Malware
 badStrings+=("jndi:ldap:");
 badStrings+=("cpuminer/" "MinerName/" "XMRig/");
+badStrings+=(" \"xfa1\"$");
 
 #Internet Explorer
 badStrings+=("Trident/");
