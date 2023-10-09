@@ -15,13 +15,13 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #Known bad, some sourced from BlockBotAddon (3-clause BSD license): https://git.friendi.ca/friendica/friendica-addons/src/branch/develop/blockbot/blockbot.php
-badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "AwarioRssBot/" "AwarioSmartBot/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "Datanyze" "Dataprovider.com" "dcrawl/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo.com-Bot/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "KOCMOHABT" "ldspider" "linkdexbot/" "LivelapBot/" "ltx71" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex.ru/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "opensiteexplorer" "PaperLiBot/" "PetalBot;" "pdrlabs" "Pinterestbot/" "proximic" "Qwantify/Bleriot/" "Re-re Studio" "SabsimBot/" "Scrapy/" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "woorankreview/" "wpif" "XoviOnpageCrawler;" "YaK/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
+badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr.com" "Datanyze" "Dataprovider.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo.com-Bot/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence.com" "LivelapBot/" "ltx71" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex.ru/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "wpif" "XoviOnpageCrawler;" "YaK/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
 
 #"All" bots
 #badStrings+=("bot/" "bot;");
 
 #Search Engines
-#badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "Google-SearchByImage" "https://developers.google.com/+/web/snippet/" "SeznamBot/" "yacybot" "YandexBot/" "YandexImages/");
+#badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "Google-SearchByImage" "https://developers.google.com/+/web/snippet/" "MojeekBot/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
 
 #Social Media
 #badStrings+=("Akkoma" "facebookexternalhit/" "github-camo" "Mastodon/" "Pleroma" "SkypeUriPreview Preview/" "Synapse" "TelegramBot" "Twitterbot/" "WhatsApp/" "XenForo/");
@@ -31,6 +31,9 @@ badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "AwarioRssBo
 
 #Monitors
 #badStrings+=("urlwatch/");
+
+#Readers
+#badStrings+=("Tiny Tiny RSS/" "android:com.laurencedawson.reddit_sync");
 
 #Generic
 #badStrings+=("curl/" "uclient-fetch" "wget/");
@@ -49,6 +52,9 @@ badStrings+=("cpuminer/" "MinerName/" "XMRig/");
 
 #Internet Explorer
 badStrings+=("Trident/");
+
+#Other
+badStrings+=("Mozilla/4.0");
 
 #Outdated macOS, https://endoflife.date/macos
 for version in {1..13}
@@ -73,7 +79,7 @@ done
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
 for version in {1..113}
 do
-	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]]; then #exclude ESR
+	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]]; then #exclude ESR
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
