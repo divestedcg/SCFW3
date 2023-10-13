@@ -15,7 +15,7 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #Known bad, some sourced from BlockBotAddon (3-clause BSD license): https://git.friendi.ca/friendica/friendica-addons/src/branch/develop/blockbot/blockbot.php
-badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "axios/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr\.com" "Datanyze" "Dataprovider\.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo\.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence\.com" "LivelapBot/" "ltx71" "Lucifer Search Bot" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex\.ru/" "MetaInspector/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nextcloud Server Crawler" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SaaSHub" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "wpif" "XoviOnpageCrawler;" "YaK/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
+badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "axios/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr\.com" "Datanyze" "Dataprovider\.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo\.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "kirkland-signature" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence\.com" "LivelapBot/" "ltx71" "Lucifer Search Bot" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex\.ru/" "MetaInspector/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nextcloud Server Crawler" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "onionlandsearchengine/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SaaSHub" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "WordPress/" "wpif" "XoviOnpageCrawler;" "YaK/" "Yeti/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
 
 badStrings+=(" \"Magellan\"$" " \"undici\"$");
 badStrings+=("compatible; Optimizer");
@@ -24,10 +24,10 @@ badStrings+=("compatible; Optimizer");
 #badStrings+=("bot/" "bot;");
 
 #Search Engines
-#badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "coccocbot-image/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "GoogleOther" "Google-SearchByImage" "https://developers\.google\.com/+/web/snippet/" "MojeekBot/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
+#badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "coccocbot-image/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "GoogleOther" "Google-SearchByImage" "https://developers\.google\.com/+/web/snippet/" "MojeekBot/" "Qwantify/" "Qwantify-prod/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
 
 #Social Media
-#badStrings+=("Akkoma" "Discordbot/" "facebookexternalhit/" "Friendica" "github-camo" "Mastodon/" "matrix-media-repo" "Misskey/" "MisskeyMediaProxy/" "Pleroma " "SkypeUriPreview Preview/" "Synapse " "TelegramBot" "Twitterbot/" "Viber/" "WhatsApp/" "XenForo/");
+#badStrings+=("Akkoma" "Discordbot/" "facebookexternalhit/" "Friendica" "github-camo" "Mastodon/" "matrix-media-repo" "Misskey/" "MisskeyMediaProxy/" "Pleroma " "SkypeUriPreview Preview/" "Slackbot " "Slackbot-LinkExpanding" "Synapse " "TelegramBot" "Twitterbot/" "Viber/" "WhatsApp/" "XenForo/");
 
 #Archival
 #badStrings+=("archive\.org_bot" "ArchiveTeam ArchiveBot/" "CCBot/" "Crawling at Home Project");
@@ -38,7 +38,7 @@ badStrings+=("compatible; Optimizer");
 #badStrings+=("isitup\.org");
 
 #Readers
-#badStrings+=("Tiny Tiny RSS/" "android:com\.laurencedawson.\reddit_sync" "Notion/");
+#badStrings+=("Tiny Tiny RSS/" "android:com\.laurencedawson.\reddit_sync" "Notion/" "ReadYou / ");
 
 #Other Allowed
 #badStrings+=("xarantolus/filtrite-list");
@@ -46,16 +46,16 @@ badStrings+=("compatible; Optimizer");
 #badStrings+=("pfSense/pfBlockerNG");
 
 #Generic
-#badStrings+=("curl/" "uclient-fetch" "wget/");
+#badStrings+=("aria2/" "curl/" "uclient-fetch" "wget/");
 #badStrings+=("Dart/" "Ktor client" "okhttp/");
 #badStrings+=("CFNetwork/"); #TODO: check more
-badStrings+=("aiohttp/" "analytics" "Apache-HttpAsyncClient/" "apache-httpclient/" "crawler" "go-http-client/" "Google-Apps-Script; beanserver;" "headless" "HeadlessChrome" "httpunit" "httrack" "libwww-perl/" "PhantomJS/" "php-curl-class/" "powershell/" "python-requests/" "python-urllib/" "python-urllib3/" "scraper" "selenium" "sindresorhus/got" "spider" "webdriver");
+badStrings+=("aiohttp/" "analytics" "Apache-HttpAsyncClient/" "Apache-HttpClient/" "crawler" "go-http-client/" "Google-Apps-Script; beanserver;" "headless" "HeadlessChrome" "httpunit" "httrack" "libwww-perl/" "PhantomJS/" "php-curl-class/" "powershell/" "python-requests/" "python-urllib/" "python-urllib3/" "scraper" "selenium" "sindresorhus/got" "spider" "webdriver");
 
 #Unset UA
 badStrings+=(" \"-\"$");
 
 #Security Scanners
-badStrings+=("CensysInspect/" "Nmap Scripting Engine;" "paloaltonetwork");
+badStrings+=("CensysInspect/" "masscan/" "Nmap Scripting Engine;" "paloaltonetwork");
 
 #Malware
 badStrings+=("jndi:ldap:");
@@ -67,7 +67,7 @@ badStrings+=("Trident/");
 
 #Other
 badStrings+=(" \.NET CLR ");
-badStrings+=("Mozilla/4\.0" " \"Mozilla/5\.0\"$");
+badStrings+=("Mozilla/4\.0" " \"Mozilla/5\.0\"$" " \"Mozilla/5\.0 (compatible)\"$");
 
 #Outdated macOS, https://endoflife.date/macos
 for version in {1..13}
