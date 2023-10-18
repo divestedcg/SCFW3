@@ -71,13 +71,13 @@ badStrings+=("Mozilla/4\.0" " \"Mozilla/5\.0\"$" " \"Mozilla/5\.0 (compatible)\"
 badStrings+=("QR Scanner Android");
 
 #Outdated macOS, https://endoflife.date/macos
-for version in {1..13} #10.13 was EOL 2020/12/01
+for version in {1..12} #macOS 10.13 was EOL 2019/12/01
 do
 	badStrings+=("Macintosh; Intel Mac OS X 10_$version""_");
 done
 
 #Outdated iOS, https://endoflife.date/ios
-for version in {1..14} #iOS 14 was EOL 2021/10/01
+for version in {1..13} #iOS 13 was EOL 2020/09/16
 do
 	if [[ $version != "12" ]]; then
 		badStrings+=("iPhone OS $version""_");
@@ -85,15 +85,15 @@ do
 done
 
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
-for version in {1..113} #Chrome 114 reached stable on 2023/05/30
+for version in {1..110} #Chrome 111 reached stable on 2023/03/07
 do
 	badStrings+=("Chrome/$version\.0\.");
 done
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
-for version in {1..113} #Firefox 114 reached stable on 2023/06/06
+for version in {1..110} #Firefox 111 reached stable on 2023/03/14
 do
-	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]]; then #exclude ESR
+	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]]; then #exclude ESR + 68 (last version for Android <5.0)
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
