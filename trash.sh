@@ -15,7 +15,7 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #Known bad, some sourced from BlockBotAddon (3-clause BSD license): https://git.friendi.ca/friendica/friendica-addons/src/branch/develop/blockbot/blockbot.php
-badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "axios/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr\.com" "Datanyze" "Dataprovider\.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo\.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "kirkland-signature" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence\.com" "LivelapBot/" "ltx71" "Lucifer Search Bot" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex\.ru/" "MetaInspector/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nextcloud Server Crawler" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "onionlandsearchengine/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SaaSHub" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "WordPress/" "wpif" "XoviOnpageCrawler;" "YaK/" "Yeti/" "YisouSpider" "YurichevBot/" "zgrab/" "zoominfobot");
+badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "axios/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr\.com" "Datanyze" "Dataprovider\.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "EdgeWatch/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo\.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "kirkland-signature" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence\.com" "LivelapBot/" "ltx71" "Lucifer Search Bot" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex\.ru/" "MetaInspector/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nextcloud Server Crawler" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "onionlandsearchengine/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SaaSHub" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "Spawning-AI" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "WordPress/" "wpif" "XoviOnpageCrawler;" "YaK/" "Yeti/" "YisouSpider" "YurichevBot/" "ZaldamoSearchBot" "zgrab/" "zoominfobot");
 
 badStrings+=(" \"Magellan\"$" " \"undici\"$");
 badStrings+=("compatible; Optimizer");
@@ -35,10 +35,10 @@ badStrings+=("compatible; Optimizer");
 #Monitors
 #badStrings+=("huginn/huginn" "urlwatch/");
 #badStrings+=("hstspreload-bot" "Do Not Track Verifier");
-#badStrings+=("isitup\.org");
+#badStrings+=("DowntimeDetector/" "isitup\.org");
 
 #Readers
-#badStrings+=("Tiny Tiny RSS/" "android:com\.laurencedawson.\reddit_sync" "Notion/" "ReadYou / ");
+#badStrings+=("Tiny Tiny RSS/" "android:com\.laurencedawson.\reddit_sync" "android:io.syncapps.lemmy_sync" "Notion/" "ReadYou / ");
 
 #Other Allowed
 #badStrings+=("xarantolus/filtrite-list");
@@ -59,24 +59,25 @@ badStrings+=("CensysInspect/" "masscan/" "Nmap Scripting Engine;" "paloaltonetwo
 
 #Malware
 badStrings+=("jndi:ldap:");
-badStrings+=("cpuminer/" "MinerName/" "XMRig/");
+badStrings+=("cpuminer/" "MinerName/" "XMRig/" "xmr-stak-cpu/");
 badStrings+=(" \"xfa1\"$");
 
-#Internet Explorer
+#Internet Explorer, EOL since 2022/06/15, replaced by Edge in 2015
 badStrings+=("Trident/");
 
 #Other
 badStrings+=(" \.NET CLR ");
 badStrings+=("Mozilla/4\.0" " \"Mozilla/5\.0\"$" " \"Mozilla/5\.0 (compatible)\"$");
+badStrings+=("QR Scanner Android");
 
 #Outdated macOS, https://endoflife.date/macos
-for version in {1..13}
+for version in {1..13} #10.13 was EOL 2020/12/01
 do
 	badStrings+=("Macintosh; Intel Mac OS X 10_$version""_");
 done
 
 #Outdated iOS, https://endoflife.date/ios
-for version in {1..14}
+for version in {1..14} #iOS 14 was EOL 2021/10/01
 do
 	if [[ $version != "12" ]]; then
 		badStrings+=("iPhone OS $version""_");
@@ -84,13 +85,13 @@ do
 done
 
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
-for version in {1..113}
+for version in {1..113} #Chrome 114 reached stable on 2023/05/30
 do
 	badStrings+=("Chrome/$version\.0\.");
 done
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
-for version in {1..113}
+for version in {1..113} #Firefox 114 reached stable on 2023/06/06
 do
 	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]]; then #exclude ESR
 		badStrings+=("Firefox/$version\.0");
