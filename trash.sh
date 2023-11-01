@@ -87,13 +87,17 @@ done
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
 for version in {1..110} #Chrome 111 reached stable on 2023/03/07
 do
-	badStrings+=("Chrome/$version\.0\.");
+	#Exclude: 108 (used by popular Bromite)
+	if [[ $version != "108" ]]; then
+		badStrings+=("Chrome/$version\.0\.");
+	fi;
 done
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
 for version in {1..110} #Firefox 111 reached stable on 2023/03/14
 do
-	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]]; then #exclude ESR + 68 (last version for Android <5.0)
+	#Exclude: ESR, 115 (last version for Windows 7/8), 68 (last version for Android <5.0), 52 (last version for Windows XP/Vista)
+	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]]; then #
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
