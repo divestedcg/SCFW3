@@ -15,7 +15,7 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #Known bad, some sourced from BlockBotAddon (3-clause BSD license): https://git.friendi.ca/friendica/friendica-addons/src/branch/develop/blockbot/blockbot.php
-badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "axios/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr\.com" "Datanyze" "Dataprovider\.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "EdgeWatch/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo\.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "kirkland-signature" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence\.com" "LivelapBot/" "ltx71" "Lucifer Search Bot" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex\.ru/" "MetaInspector/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nextcloud Server Crawler" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "onionlandsearchengine/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SaaSHub" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "Spawning-AI" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "WordPress/" "wpif" "XoviOnpageCrawler;" "YaK/" "Yeti/" "YisouSpider" "YurichevBot/" "ZaldamoSearchBot" "zgrab/" "zoominfobot" "fidget-spinner-bot" "Timpibot/" "AntBot" "Scrapy/" "test-bot" "2ip bot/");
+badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "axios/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr\.com" "Datanyze" "Dataprovider\.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "EdgeWatch/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo\.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "kirkland-signature" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence\.com" "LivelapBot/" "ltx71" "Lucifer Search Bot" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex\.ru/" "MetaInspector/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nextcloud Server Crawler" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "onionlandsearchengine/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SaaSHub" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "Spawning-AI" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "WordPress/" "wpif" "XoviOnpageCrawler;" "YaK/" "Yeti/" "YisouSpider" "YurichevBot/" "ZaldamoSearchBot" "zgrab/" "zoominfobot" "fidget-spinner-bot" "Timpibot/" "AntBot" "test-bot" "2ip bot/");
 
 badStrings+=(" \"Magellan\"$" " \"undici\"$");
 badStrings+=("compatible; Optimizer");
@@ -31,6 +31,7 @@ badStrings+=("compatible; Optimizer");
 
 #Archival
 #badStrings+=("archive\.org_bot" "ArchiveTeam ArchiveBot/" "CCBot/" "Crawling at Home Project");
+badStrings+=("httrack");
 
 #Monitors
 #badStrings+=("huginn/huginn" "urlwatch/");
@@ -49,7 +50,8 @@ badStrings+=("compatible; Optimizer");
 #badStrings+=("aria2/" "curl/" "uclient-fetch" "wget/");
 #badStrings+=("Dart/" "Ktor client" "okhttp/");
 #badStrings+=("CFNetwork/"); #TODO: check more
-badStrings+=("aiohttp/" "analytics" "Apache-HttpAsyncClient/" "Apache-HttpClient/" "crawler" "go-http-client/" "Google-Apps-Script; beanserver;" "headless" "HeadlessChrome" "httpunit" "httrack" "libwww-perl/" "PhantomJS/" "php-curl-class/" "powershell/" "python-requests/" "python-urllib/" "python-urllib3/" "scraper" "selenium" "sindresorhus/got" "spider" "webdriver");
+badStrings+=("aiohttp/" "Apache-HttpAsyncClient/" "Apache-HttpClient/" "go-http-client/" "Google-Apps-Script; beanserver;" "httpunit" "libwww-perl/" "php-curl-class/" "powershell/" "python-requests/" "python-urllib/" "python-urllib3/" "sindresorhus/got");
+badStrings+=("analytics" "crawler" "headless" "HeadlessChrome" "PhantomJS/" "scraper" "selenium" "spider" "webdriver");
 
 #Unset UA
 badStrings+=(" \"-\"$");
@@ -85,7 +87,7 @@ do
 done
 
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
-for version in {1..110} #Chrome 111 reached stable on 2023/03/07
+for version in {1..100} #Chrome 101 reached stable on 2022/04/26
 do
 	#Exclude: 108 (used by popular Bromite)
 	if [[ $version != "108" ]]; then
@@ -94,10 +96,10 @@ do
 done
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
-for version in {1..110} #Firefox 111 reached stable on 2023/03/14
+for version in {1..100} #Firefox 101 reached stable on 2022/05/31
 do
 	#Exclude: ESR, 115 (last version for Windows 7/8), 68 (last version for Android <5.0), 52 (last version for Windows XP/Vista)
-	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]]; then #
+	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then #
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
