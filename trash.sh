@@ -44,6 +44,7 @@ badStrings+=("httrack");
 #Other Allowed
 #badStrings+=("xarantolus/filtrite-list");
 #badStrings+=("Hypatia");
+#badStrings+=("com\.machiav3lli\.fdroid-" "com\.machiav3lli.\fdroid\.neo-");
 #badStrings+=("pfSense/pfBlockerNG");
 
 #Generic
@@ -71,9 +72,10 @@ badStrings+=("Trident/");
 badStrings+=(" \.NET CLR ");
 badStrings+=("Mozilla/4\.0" " \"Mozilla/5\.0\"$" " \"Mozilla/5\.0 (compatible)\"$");
 badStrings+=("QR Scanner Android");
+badStrings+=("/wp-login\.php");
 
 #Outdated macOS, https://endoflife.date/macos
-for version in {1..12} #macOS 10.12 was EOL 2019/12/01
+for version in {1..12} #macOS 10.12 was EOL 2019/10/01
 do
 	badStrings+=("Macintosh; Intel Mac OS X 10_$version""_");
 done
@@ -109,6 +111,9 @@ for badString in "${badStrings[@]}"
 do
 	mapfile -t -O "${#trash[@]}" trash < <( grep -i "$badString" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort | uniq );
 done
+
+#Filter out all non HEAD & GET requests
+mapfile -t -O "${#trash[@]}" trash < <( grep -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort | uniq );
 
 #Return the trash
 for rubbish in "${trash[@]}"
