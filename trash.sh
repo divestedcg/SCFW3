@@ -93,10 +93,10 @@ for version in {1..100} #Chrome 101 reached stable on 2022/04/26
 do
 	#Exclude:
 	#108: last version of popular Bromite
-	#81: last version for Android KitKat
-	#95: last version for Android Lolipop
-	#106: last version for Android Marshmallow
-	#119: last version for Android Nougat
+	#81: last version for Android KitKat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
+	#95: last version for Android Lolipop, https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
+	#106: last version for Android Marshmallow, https://groups.google.com/a/chromium.org/g/chromium-dev/c/z_RvoPoIeoM
+	#119: last version for Android Nougat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
 	if [[ $version != "108" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "119" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
@@ -109,9 +109,9 @@ do
 	#Next ESR: 128
 	#Current ESR: 115
 	#Previous two ESR: 102, 91
-	#115 (last version for Windows 7/8)
-	#68 (last version for Android KitKat)
-	#52 (last version for Windows XP/Vista)
+	#115: last version for Windows 7/8, https://support.mozilla.org/en-US/kb/firefox-users-windows-7-8-and-81-moving-extended-support
+	#68: last version for Android KitKat
+	#52: last version for Windows XP/Vista, https://support.mozilla.org/en-US/kb/end-support-windows-xp-and-vista
 	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then #
 		badStrings+=("Firefox/$version\.0");
 	fi;
