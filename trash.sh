@@ -91,8 +91,13 @@ done
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
 for version in {1..100} #Chrome 101 reached stable on 2022/04/26
 do
-	#Exclude: 108 (used by popular Bromite)
-	if [[ $version != "108" ]]; then
+	#Exclude:
+	#108: last version of popular Bromite
+	#81: last version for Android KitKat
+	#95: last version for Android Lolipop
+	#106: last version for Android Marshmallow
+	#119: last version for Android Nougat
+	if [[ $version != "108" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "119" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done
@@ -100,7 +105,13 @@ done
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
 for version in {1..100} #Firefox 101 reached stable on 2022/05/31
 do
-	#Exclude: ESR, 115 (last version for Windows 7/8), 68 (last version for Android <5.0), 52 (last version for Windows XP/Vista)
+	#Exclude:
+	#Next ESR: 128
+	#Current ESR: 115
+	#Previous two ESR: 102, 91
+	#115 (last version for Windows 7/8)
+	#68 (last version for Android KitKat)
+	#52 (last version for Windows XP/Vista)
 	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then #
 		badStrings+=("Firefox/$version\.0");
 	fi;
