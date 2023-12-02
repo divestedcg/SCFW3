@@ -117,24 +117,34 @@ do
 	fi;
 done
 
-#Search for the trash
-for badString in "${badStrings[@]}"
-do
-	mapfile -t -O "${#trash[@]}" trash < <( grep -i "$badString" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort | uniq );
-done
+#Search for the trash in Apache logs
+if [ -d "/var/log/httpd/" ]; then
+	for badString in "${badStrings[@]}"
+	do
+		mapfile -t -O "${#trash[@]}" trash < <( grep -i "$badString" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
+	done
 
-#Filter out all non HEAD & GET requests
-mapfile -t -O "${#trash[@]}" trash < <( grep -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort | uniq );
+	#Filter out all non HEAD & GET requests
+	mapfile -t -O "${#trash[@]}" trash < <( grep -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
+fi;
+
+#Search for the trash in sshd logs
+mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Invalid user" -e "Unable to negotiate with" -e "Disconnecting authenticating user root .* Too many authentication failures" | awk '{ print $10 } ' | sort -u );
+mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "fatal: Timeout before authentication" -e "error: maximum authentication attempts exceeded" | awk '{ print $11 } ' | sort -u );
 
 #Return the trash
 for rubbish in "${trash[@]}"
 do
 	if [[ $rubbish == *":"* ]]; then
 		echo "$rubbish" >> /etc/trash-v6.ipset;
-	else
+	elif [[ $rubbish == *"."* ]]; then
 		echo "$rubbish" >> /etc/trash-v4.ipset;
 	fi
 done
+
+#Ensure they exist, in case there is none of one
+touch /etc/trash-v4.ipset;
+touch /etc/trash-v6.ipset;
 
 #Deduplicate
 sort -u -o /etc/trash-v4.ipset /etc/trash-v4.ipset;
