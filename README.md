@@ -8,10 +8,11 @@ It is meant to be used on top of firewalld.
 
 Use
 ---
-- Choose the lists you want enabled at the top of scfw3.sh
-- `$ sudo sh scfw3.sh enable`
-- `$ sudo sh scfw3.sh disable`
-- Or place in /etc/cron.daily/0scfw with bottom bits edited to enableforce
+- Place scfw3.sh into /etc/cron.daily/1scfw
+  - Configure the lists you want enabled at the top of it
+- Place trash.sh into /etc/cron.hourly/2trash
+- `chmod +x` both of them
+- Enjoy!
 
 Known Issues
 ------------

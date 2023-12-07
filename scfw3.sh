@@ -110,13 +110,18 @@ clearLists() {
 	echo "[SCFW3] Unloaded";
 }
 
-if [ "$1" = "enable" ]; then
-	loadLists;
-elif [ "$1" = "enableforce" ]; then
-	rm -rfv /tmp/scfw3;
-	loadLists;
-elif [ "$1" = "disable" ]; then
-	clearLists;
-else
-	echo "Options are: enable, enableforce, disable";
-fi;
+#Friendly prompt
+#if [ "$1" = "enable" ]; then
+#	loadLists;
+#elif [ "$1" = "enableforce" ]; then
+#	rm -rfv /tmp/scfw3;
+#	loadLists;
+#elif [ "$1" = "disable" ]; then
+#	clearLists;
+#else
+#	echo "Options are: enable, enableforce, disable";
+#fi;
+
+#Just run as expected
+rm -rfv /tmp/scfw3;
+loadLists;
