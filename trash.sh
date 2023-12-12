@@ -128,6 +128,11 @@ if [ -d "/var/log/httpd/" ]; then
 	mapfile -t -O "${#trash[@]}" trash < <( grep -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
 fi;
 
+#Search for the trash in rsyncd logs
+if [ -f "/var/log/rsyncd.log" ]; then
+	mapfile -t -O "${#trash[@]}" trash < <( grep denied /var/log/rsyncd.log | awk '{ print $11 } ' | sort -u | sed 's/(//' | sed 's/)//' );
+fi;
+
 #Search for the trash in sshd logs
 mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Invalid user" -e "Unable to negotiate with" -e "Disconnecting authenticating user root .* Too many authentication failures" | awk '{ print $10 } ' | sort -u );
 mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "fatal: Timeout before authentication" -e "error: maximum authentication attempts exceeded" | awk '{ print $11 } ' | sort -u );
