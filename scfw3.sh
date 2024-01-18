@@ -1,5 +1,5 @@
 #!/bin/bash
-#Copyright (c) 2021-2023 Divested Computing Group
+#Copyright (c) 2021-2024 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -16,15 +16,46 @@
 
 #TODO: Enable IPv6 support
 
-blockedLists=('firehol_level1');
-blockedLists+=('firehol_level2');
-blockedLists+=('firehol_level3');
-#blockedLists+=('firehol_level4');
-#blockedLists+=('firehol_webserver');
-#blockedLists+=('firehol_webclient');
-#blockedLists+=('firehol_anonymous');
+
+#Lists
+#<10k entries
+blockedLists+=('bds_atif.ipset');
+blockedLists+=('botscout_7d.ipset');
+blockedLists+=('botvrij_dst.ipset');
+blockedLists+=('bruteforceblocker.ipset');
+blockedLists+=('cidr_report_bogons.netset');
+blockedLists+=('cybercrime.ipset');
+blockedLists+=('dyndns_ponmocup.ipset');
+blockedLists+=('et_block.netset');
+blockedLists+=('et_compromised.netset');
+blockedLists+=('gpf_comics.ipset');
+blockedLists+=('greensnow.ipset');
+blockedLists+=('myip.ipset');
+blockedLists+=('php_commenters_7d.ipset' 'php_dictionary_7d.ipset' 'php_harvesters_7d.ipset' 'php_spammers_7d.ipset');
+blockedLists+=('sblam.ipset');
+blockedLists+=('socks_proxy_7d.ipset');
+blockedLists+=('spamhaus_drop.netset');
+blockedLists+=('spamhaus_edrop.netset');
+blockedLists+=('sslproxies_7d.ipset');
+blockedLists+=('stopforumspam_7d.ipset');
+blockedLists+=('vxvault.ipset');
+blockedLists+=('xroxy_7d.ipset');
+#blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'tor_exits.ipset');
+#<50k entries
+blockedLists+=('blocklist_de.ipset');
+blockedLists+=('ciarmy.ipset');
+blockedLists+=('cleantalk_7d.ipset');
+#<100k entries
+#blockedLists+=('blocklist_net_ua.ipset');
+#blockedLists+=('haley_ssh.ipset');
+#<150k entries
+#blockedLists+=('stopforumspam.ipset');
+
+#Countries
 blockedCountries=();
 #blockedCountries+=('cn' 'us' 'ru');
+
+#Exclusions
 allowList=('!/0.0.0.0\/8/' '!/10.0.0.0\/8/' '!/172.16.0.0\/12/' '!/192.168.0.0\/16/' '!/169.254.0.0\/16/' '!/100.64.0.0\/10/' '!/fd00::\/7/' '!/fd00::\/8/' '!/fe80::\/10/');
 
 createWorkDirectory() {
@@ -39,11 +70,11 @@ importListToFirewall() {
 	name=$1;
 	url=$2;
 	if [ "$3" = "true" ]; then inet="--option=family=inet6"; else inet="--option=family=inet"; fi;
-	if [ ! -f "$name.ipset" ]; then /usr/bin/wget -O "$name".ipset "$url"; fi;
-	removeAllowedEntries "$name".ipset;
+	if [ ! -f "$name" ]; then /usr/bin/wget -O "$name" "$url"; fi;
+	removeAllowedEntries "$name";
 	firewall-cmd --permanent --delete-ipset="$name" &>/dev/null || true;
 	firewall-cmd --permanent --new-ipset="$name" --type=hash:net --option=maxelem=200000 --option=hashsize=16384 $inet;
-	firewall-cmd --permanent --ipset="$name" --add-entries-from-file="$name".ipset;
+	firewall-cmd --permanent --ipset="$name" --add-entries-from-file="$name";
 	firewall-cmd --permanent --zone=scfw --add-source=ipset:"$name";
 	unset inet;
 	sleep 2;
@@ -77,7 +108,7 @@ loadLists() {
 
 	for list in "${blockedLists[@]}"
 	do
-		importListToFirewall "$list" "https://iplists.firehol.org/files/$list.netset";
+		importListToFirewall "$list" "https://iplists.firehol.org/files/$list";
 	done;
 
 	for country in "${blockedCountries[@]}"
