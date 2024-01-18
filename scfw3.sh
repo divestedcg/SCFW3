@@ -15,7 +15,7 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #TODO: Enable IPv6 support
-
+export SCFW_BLOCK_TOR=false;
 
 #Lists
 #<10k entries
@@ -27,7 +27,7 @@ blockedLists+=('cidr_report_bogons.netset');
 blockedLists+=('cybercrime.ipset');
 blockedLists+=('dyndns_ponmocup.ipset');
 blockedLists+=('et_block.netset');
-blockedLists+=('et_compromised.netset');
+blockedLists+=('et_compromised.ipset');
 blockedLists+=('gpf_comics.ipset');
 blockedLists+=('greensnow.ipset');
 blockedLists+=('myip.ipset');
@@ -40,7 +40,7 @@ blockedLists+=('sslproxies_7d.ipset');
 blockedLists+=('stopforumspam_7d.ipset');
 blockedLists+=('vxvault.ipset');
 blockedLists+=('xroxy_7d.ipset');
-#blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'tor_exits.ipset');
+if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'tor_exits.ipset'); fi;
 #<50k entries
 blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
@@ -87,12 +87,22 @@ importCountryList() {
 	#importListToFirewall country-block-v6-"$countryCode" "https://www.ipdeny.com/ipv6/ipaddresses/blocks/$countryCode.zone" true;
 }
 
+prepareTorExclusion() {
+	wget "https://iplists.firehol.org/files/tor_exits.ipset" -O - | grep -v '^#' | sed 's/\./\\./g' > tor_exclusions.grep;
+}
+
 removeAllowedEntries() {
+	wc -l "$1";
+	if [ "$SCFW_BLOCK_TOR" = false ]; then
+		mv "$1" "$1.orig";
+		grep -v -f tor_exclusions.grep "$1.orig" > "$1";
+	fi;
 	#TODO: Concat them all and perform in one pass
 	for allow in "${allowList[@]}"
 	do
 		awk -i inplace "$allow" "$1";
 	done;
+	wc -l "$1";
 }
 
 loadLists() {
@@ -105,6 +115,8 @@ loadLists() {
 	#Setup the zone
 	firewall-cmd --new-zone=scfw --permanent || true;
 	firewall-cmd --zone=scfw --set-target=DROP --permanent;
+
+	if [ "$SCFW_BLOCK_TOR" = false ]; then prepareTorExclusion; fi;
 
 	for list in "${blockedLists[@]}"
 	do
