@@ -1,5 +1,5 @@
 #!/bin/bash
-#Copyright (c) 2023 Divested Computing Group
+#Copyright (c) 2023-2024 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -93,11 +93,13 @@ for version in {1..100} #Chrome 101 reached stable on 2022/04/26
 do
 	#Exclude:
 	#108: last version of popular Bromite
+	#49: last version for Windows XP/Vista
 	#81: last version for Android KitKat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
 	#95: last version for Android Lolipop, https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
 	#106: last version for Android Marshmallow, https://groups.google.com/a/chromium.org/g/chromium-dev/c/z_RvoPoIeoM
+	#109: last version for Windows 7/8
 	#119: last version for Android Nougat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
-	if [[ $version != "108" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "119" ]]; then
+	if [[ $version != "108" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done

@@ -20,7 +20,6 @@ export SCFW_BLOCK_TOR=false;
 #Lists
 #<10k entries
 blockedLists+=('bds_atif.ipset');
-blockedLists+=('botscout_7d.ipset');
 blockedLists+=('botvrij_dst.ipset');
 blockedLists+=('bruteforceblocker.ipset');
 blockedLists+=('cidr_report_bogons.netset');
@@ -31,24 +30,26 @@ blockedLists+=('et_compromised.ipset');
 blockedLists+=('gpf_comics.ipset');
 blockedLists+=('greensnow.ipset');
 blockedLists+=('myip.ipset');
-blockedLists+=('php_commenters_7d.ipset' 'php_dictionary_7d.ipset' 'php_harvesters_7d.ipset' 'php_spammers_7d.ipset');
+blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
 blockedLists+=('sblam.ipset');
-blockedLists+=('socks_proxy_7d.ipset');
+blockedLists+=('socks_proxy_30d.ipset');
 blockedLists+=('spamhaus_drop.netset');
 blockedLists+=('spamhaus_edrop.netset');
-blockedLists+=('sslproxies_7d.ipset');
+blockedLists+=('sslproxies_30d.ipset');
 blockedLists+=('stopforumspam_7d.ipset');
 blockedLists+=('vxvault.ipset');
-blockedLists+=('xroxy_7d.ipset');
+blockedLists+=('xroxy_30d.ipset');
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'tor_exits.ipset'); fi;
+#<25k entries
+blockedLists+=('botscout_30d.ipset');
 #<50k entries
 blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
 blockedLists+=('cleantalk_7d.ipset');
 #<100k entries
-#blockedLists+=('blocklist_net_ua.ipset');
 #blockedLists+=('haley_ssh.ipset');
 #<150k entries
+blockedLists+=('blocklist_net_ua.ipset');
 #blockedLists+=('stopforumspam.ipset');
 
 #Countries
