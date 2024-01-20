@@ -14,7 +14,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#TODO: Enable IPv6 support
+#TODO: Enable/Fixup IPv6 support
 export SCFW_BLOCK_TOR=false;
 
 #Lists
@@ -37,7 +37,7 @@ blockedLists+=('spamhaus_drop.netset');
 blockedLists+=('spamhaus_edrop.netset');
 blockedLists+=('sslproxies_30d.ipset');
 blockedLists+=('stopforumspam_7d.ipset');
-#blockedLists+=('threatview.ipset'); #TODO: normalize out leading zeros
+blockedLists+=('threatview.ipset');
 blockedLists+=('vxvault.ipset');
 blockedLists+=('xroxy_30d.ipset');
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'tor_exits.ipset'); fi;
@@ -73,7 +73,16 @@ importListToFirewall() {
 	name=$1;
 	url=$2;
 	if [ "$3" = "true" ]; then inet="--option=family=inet6"; else inet="--option=family=inet"; fi;
-	if [ ! -f "$name" ]; then /usr/bin/wget -O "$name" "$url"; fi;
+	if [ ! -f "$name" ]; then
+		#Remove comments, empty lines, and leading zeroes
+		#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
+		#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
+		if [[ "$list" == "threatview.ipset" ]]; then
+			/usr/bin/wget -O - "$url" | grep -v -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' > "$name";
+		else
+			/usr/bin/wget -O - "$url" | grep -v -e '^#' -e '^[[:space:]]*$' > "$name";
+		fi;
+	fi;
 	removeAllowedEntries "$name";
 	firewall-cmd --permanent --delete-ipset="$name" &>/dev/null || true;
 	firewall-cmd --permanent --new-ipset="$name" --type=hash:net --option=maxelem=200000 --option=hashsize=16384 $inet;
