@@ -37,11 +37,13 @@ blockedLists+=('spamhaus_drop.netset');
 blockedLists+=('spamhaus_edrop.netset');
 blockedLists+=('sslproxies_30d.ipset');
 blockedLists+=('stopforumspam_7d.ipset');
+#blockedLists+=('threatview.ipset'); #TODO: normalize out leading zeros
 blockedLists+=('vxvault.ipset');
 blockedLists+=('xroxy_30d.ipset');
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'tor_exits.ipset'); fi;
 #<25k entries
 blockedLists+=('botscout_30d.ipset');
+blockedLists+=('cinscore.ipset');
 #<50k entries
 blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
@@ -121,7 +123,13 @@ loadLists() {
 
 	for list in "${blockedLists[@]}"
 	do
-		importListToFirewall "$list" "https://iplists.firehol.org/files/$list";
+		if [[ "$list" == "cinscore.ipset" ]]; then
+			importListToFirewall "$list" "https://cinsscore.com/list/ci-badguys.txt";
+		elif [[ "$list" == "threatview.ipset" ]]; then
+			importListToFirewall "$list" "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt";
+		else
+			importListToFirewall "$list" "https://iplists.firehol.org/files/$list";
+		fi;
 	done;
 
 	for country in "${blockedCountries[@]}"
