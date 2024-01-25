@@ -58,9 +58,6 @@ blockedLists+=('blocklist_net_ua.ipset');
 blockedCountries=();
 #blockedCountries+=('cn' 'us' 'ru');
 
-#Exclusions
-allowList=('!/0.0.0.0\/8/' '!/10.0.0.0\/8/' '!/172.16.0.0\/12/' '!/192.168.0.0\/16/' '!/169.254.0.0\/16/' '!/100.64.0.0\/10/' '!/fd00::\/7/' '!/fd00::\/8/' '!/fe80::\/10/');
-
 createWorkDirectory() {
 	mkdir /tmp/scfw3 &>/dev/null || true;
 	chmod 700 /tmp/scfw3;
@@ -108,13 +105,15 @@ removeAllowedEntries() {
 	if [ "$SCFW_BLOCK_TOR" = false ]; then
 		mv "$1" "$1.orig";
 		grep -v -f tor_exclusions.grep "$1.orig" > "$1";
+		rm "$1.orig";
+		wc -l "$1";
 	fi;
-	#TODO: Concat them all and perform in one pass
-	for allow in "${allowList[@]}"
-	do
-		awk -i inplace "$allow" "$1";
-	done;
-	wc -l "$1";
+	if [ -f /etc/scfw-exclusions.grep ]; then
+		mv "$1" "$1.orig";
+		grep -v -f /etc/scfw-exclusions.grep "$1.orig" > "$1";
+		rm "$1.orig";
+		wc -l "$1";
+	fi;
 }
 
 loadLists() {
@@ -128,6 +127,9 @@ loadLists() {
 	firewall-cmd --new-zone=scfw --permanent || true;
 	firewall-cmd --zone=scfw --set-target=DROP --permanent;
 
+	if [ ! -f /etc/scfw-exclusions.grep ]; then
+		echo -e '^0\.0\.0\.0/8$\n^10\.0\.0\.0/8$\n^172\.16\.0\.0/12$\n^192\.168\.0\.0/16$\n^169\.254\.0\.0/16$\n^100\.64\.0\.0/10$\n^fd00::/7$\n^fd00::/8$\n^fe80::/10$' > /etc/scfw-exclusions.grep;
+	fi;
 	if [ "$SCFW_BLOCK_TOR" = false ]; then prepareTorExclusion; fi;
 
 	for list in "${blockedLists[@]}"
