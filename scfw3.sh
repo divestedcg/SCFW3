@@ -40,7 +40,7 @@ blockedLists+=('stopforumspam_7d.ipset');
 blockedLists+=('threatview.ipset');
 blockedLists+=('vxvault.ipset');
 blockedLists+=('xroxy_30d.ipset');
-if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'tor_exits.ipset'); fi;
+if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
 #<25k entries
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
