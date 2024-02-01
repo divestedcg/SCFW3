@@ -135,10 +135,18 @@ if [ -f "/var/log/rsyncd.log" ]; then
 	mapfile -t -O "${#trash[@]}" trash < <( grep denied /var/log/rsyncd.log | awk '{ print $11 } ' | sort -u | sed 's/(//' | sed 's/)//' );
 fi;
 
+#Search for the trash in murmur logs
+if [ -f "/usr/lib/systemd/system/murmur.service" ]; then
+	#This relies on the built-in autoban mechanism being configured
+	mapfile -t -O "${#trash[@]}" trash < <( journalctl -u murmur.service | grep -e " => Ignoring connection: " | awk '{ print $12 } ' | grep -v -e "<<" -e ">>" | sed 's/\(.*\):.*/\1 /' | sort -u );
+fi;
+
 #Search for the trash in sshd logs
-mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Invalid user" -e "Unable to negotiate with" -e "Disconnecting authenticating user root .* Too many authentication failures" | awk '{ print $10 } ' | sort -u );
-mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "fatal: Timeout before authentication" -e "error: maximum authentication attempts exceeded" -e "Disconnected from authenticating user root" | awk '{ print $11 } ' | sort -u );
-mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Connection closed by authenticating user" | awk '{ print $12 } ' | sort -u );
+if [ -f "/usr/lib/systemd/system/sshd.service" ]; then
+	mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Invalid user" -e "Unable to negotiate with" -e "Disconnecting authenticating user root .* Too many authentication failures" | awk '{ print $10 } ' | sort -u );
+	mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "fatal: Timeout before authentication" -e "error: maximum authentication attempts exceeded" -e "Disconnected from authenticating user root" | awk '{ print $11 } ' | sort -u );
+	mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Connection closed by authenticating user" | awk '{ print $12 } ' | sort -u );
+fi;
 
 #Return the trash
 for rubbish in "${trash[@]}"
@@ -160,8 +168,10 @@ sort -u -o /etc/trash-v6.ipset /etc/trash-v6.ipset;
 
 #Remove exclusions
 if [ -f /etc/scfw-exclusions.grep ]; then
-	journalctl -u sshd.service | grep -e "Accepted keyboard-interactive/pam for root from " | awk '{ print $11 } ' | sort -u | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' >> /etc/scfw-exclusions.grep;
-	sort -u -o /etc/scfw-exclusions.grep /etc/scfw-exclusions.grep;
+	if [ -f "/usr/lib/systemd/system/sshd.service" ]; then
+		journalctl -u sshd.service | grep -e "Accepted keyboard-interactive/pam for root from " | awk '{ print $11 } ' | sort -u | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' >> /etc/scfw-exclusions.grep;
+		sort -u -o /etc/scfw-exclusions.grep /etc/scfw-exclusions.grep;
+	fi;
 
 	mv /etc/trash-v4.ipset /etc/trash-v4.ipset.orig;
 	mv /etc/trash-v6.ipset /etc/trash-v6.ipset.orig;

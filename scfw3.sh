@@ -38,12 +38,14 @@ blockedLists+=('spamhaus_edrop.netset');
 blockedLists+=('sslproxies_30d.ipset');
 blockedLists+=('stopforumspam_7d.ipset');
 blockedLists+=('threatview.ipset');
+#blockedLists+=('vpn_x.ipset');
 blockedLists+=('vxvault.ipset');
 blockedLists+=('xroxy_30d.ipset');
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
 #<25k entries
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
+#blockedLists+=('vpn_a.ipset');
 #<50k entries
 blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
@@ -76,6 +78,8 @@ importListToFirewall() {
 		#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
 		if [[ "$list" == "threatview.ipset" ]]; then
 			/usr/bin/wget -O - "$url" | grep -v -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' > "$name";
+		elif [[ "$list" == "vpn_a.ipset" ]]; then
+			/usr/bin/wget -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' > "$name";
 		else
 			/usr/bin/wget -O - "$url" | grep -v -e '^#' -e '^[[:space:]]*$' > "$name";
 		fi;
@@ -138,6 +142,10 @@ loadLists() {
 			importListToFirewall "$list" "https://cinsscore.com/list/ci-badguys.txt";
 		elif [[ "$list" == "threatview.ipset" ]]; then
 			importListToFirewall "$list" "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt";
+		elif [[ "$list" == "vpn_a.ipset" ]]; then
+			importListToFirewall "$list" "https://github.com/az0/vpn_ip/raw/main/data/output/ip.txt";
+		elif [[ "$list" == "vpn_x.ipset" ]]; then
+			importListToFirewall "$list" "https://github.com/X4BNet/lists_vpn/raw/main/output/vpn/ipv4.txt";
 		else
 			importListToFirewall "$list" "https://iplists.firehol.org/files/$list";
 		fi;
