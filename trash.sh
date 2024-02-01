@@ -137,7 +137,8 @@ fi;
 
 #Search for the trash in sshd logs
 mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Invalid user" -e "Unable to negotiate with" -e "Disconnecting authenticating user root .* Too many authentication failures" | awk '{ print $10 } ' | sort -u );
-mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "fatal: Timeout before authentication" -e "error: maximum authentication attempts exceeded" | awk '{ print $11 } ' | sort -u );
+mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "fatal: Timeout before authentication" -e "error: maximum authentication attempts exceeded" -e "Disconnected from authenticating user root" | awk '{ print $11 } ' | sort -u );
+mapfile -t -O "${#trash[@]}" trash < <( journalctl -u sshd.service | grep -e "Connection closed by authenticating user" | awk '{ print $12 } ' | sort -u );
 
 #Return the trash
 for rubbish in "${trash[@]}"
@@ -157,8 +158,22 @@ touch /etc/trash-v6.ipset;
 sort -u -o /etc/trash-v4.ipset /etc/trash-v4.ipset;
 sort -u -o /etc/trash-v6.ipset /etc/trash-v6.ipset;
 
+#Remove exclusions
+if [ -f /etc/scfw-exclusions.grep ]; then
+	journalctl -u sshd.service | grep -e "Accepted keyboard-interactive/pam for root from " | awk '{ print $11 } ' | sort -u | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' >> /etc/scfw-exclusions.grep;
+	sort -u -o /etc/scfw-exclusions.grep /etc/scfw-exclusions.grep;
+
+	mv /etc/trash-v4.ipset /etc/trash-v4.ipset.orig;
+	mv /etc/trash-v6.ipset /etc/trash-v6.ipset.orig;
+
+	grep -v -f /etc/scfw-exclusions.grep /etc/trash-v4.ipset.orig > /etc/trash-v4.ipset;
+	grep -v -f /etc/scfw-exclusions.grep /etc/trash-v6.ipset.orig > /etc/trash-v6.ipset;
+
+	rm /etc/trash-v4.ipset.orig /etc/trash-v6.ipset.orig;
+fi;
+
 #Fixups
-sed -i '/127.0.0.1/d' /etc/trash-v4.ipset;
+sed -i '/^127\.0\.0\.1$/d' /etc/trash-v4.ipset;
 
 #Print a count
 wc -l /etc/trash-*.ipset

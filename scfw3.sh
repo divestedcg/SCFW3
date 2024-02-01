@@ -97,7 +97,7 @@ importCountryList() {
 }
 
 prepareTorExclusion() {
-	wget "https://iplists.firehol.org/files/tor_exits.ipset" -O - | grep -v '^#' | sed 's/\./\\./g' > tor_exclusions.grep;
+	wget "https://iplists.firehol.org/files/tor_exits.ipset" -O - | grep -v '^#' | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' > tor_exclusions.grep;
 }
 
 removeAllowedEntries() {
@@ -128,7 +128,7 @@ loadLists() {
 	firewall-cmd --zone=scfw --set-target=DROP --permanent;
 
 	if [ ! -f /etc/scfw-exclusions.grep ]; then
-		echo -e '^0\.0\.0\.0/8$\n^10\.0\.0\.0/8$\n^172\.16\.0\.0/12$\n^192\.168\.0\.0/16$\n^169\.254\.0\.0/16$\n^100\.64\.0\.0/10$\n^fd00::/7$\n^fd00::/8$\n^fe80::/10$' > /etc/scfw-exclusions.grep;
+		echo -e '^127\.0\.0\.1$\n^0\.0\.0\.0/8$\n^10\.0\.0\.0/8$\n^172\.16\.0\.0/12$\n^192\.168\.0\.0/16$\n^169\.254\.0\.0/16$\n^100\.64\.0\.0/10$\n^fd00::/7$\n^fd00::/8$\n^fe80::/10$' > /etc/scfw-exclusions.grep;
 	fi;
 	if [ "$SCFW_BLOCK_TOR" = false ]; then prepareTorExclusion; fi;
 
