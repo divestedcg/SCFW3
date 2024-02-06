@@ -27,14 +27,17 @@ blockedLists+=('cybercrime.ipset');
 blockedLists+=('dyndns_ponmocup.ipset');
 blockedLists+=('et_block.netset');
 blockedLists+=('et_compromised.ipset');
+blockedLists+=('feodo.ipset');
 blockedLists+=('gpf_comics.ipset');
 blockedLists+=('greensnow.ipset');
+#blockedLists+=('ipsum-4.ipset');
 blockedLists+=('myip.ipset');
 blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
 blockedLists+=('sblam.ipset');
 blockedLists+=('socks_proxy_30d.ipset');
 blockedLists+=('spamhaus_drop.netset');
 blockedLists+=('spamhaus_edrop.netset');
+blockedLists+=('sslbl.ipset');
 blockedLists+=('sslproxies_30d.ipset');
 blockedLists+=('stopforumspam_7d.ipset');
 blockedLists+=('threatview.ipset');
@@ -45,16 +48,20 @@ if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipse
 #<25k entries
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
+#blockedLists+=('ipsum-3.ipset');
 #blockedLists+=('vpn_a.ipset');
 #<50k entries
 blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
 blockedLists+=('cleantalk_7d.ipset');
+#blockedLists+=('ipsum-2.ipset');
 #<100k entries
 #blockedLists+=('haley_ssh.ipset');
 #<150k entries
 blockedLists+=('blocklist_net_ua.ipset');
 #blockedLists+=('stopforumspam.ipset');
+#<300k entries
+#blockedLists+=('ipsum-1.ipset');
 
 #Countries
 blockedCountries=();
@@ -140,6 +147,18 @@ loadLists() {
 	do
 		if [[ "$list" == "cinscore.ipset" ]]; then
 			importListToFirewall "$list" "https://cinsscore.com/list/ci-badguys.txt";
+		elif [[ "$list" == "feodo.ipset" ]]; then
+			importListToFirewall "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
+		elif [[ "$list" == "ipsum-1.ipset" ]]; then
+			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/1.txt";
+		elif [[ "$list" == "ipsum-2.ipset" ]]; then
+			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/2.txt";
+		elif [[ "$list" == "ipsum-3.ipset" ]]; then
+			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/3.txt";
+		elif [[ "$list" == "ipsum-4.ipset" ]]; then
+			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/4.txt";
+		elif [[ "$list" == "sslbl.ipset" ]]; then
+			importListToFirewall "$list" "https://sslbl.abuse.ch/blacklist/sslipblacklist.txt";
 		elif [[ "$list" == "threatview.ipset" ]]; then
 			importListToFirewall "$list" "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt";
 		elif [[ "$list" == "vpn_a.ipset" ]]; then
