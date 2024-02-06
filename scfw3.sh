@@ -61,7 +61,7 @@ blockedLists+=('cleantalk_7d.ipset');
 blockedLists+=('blocklist_net_ua.ipset');
 #blockedLists+=('stopforumspam.ipset');
 #<300k entries
-#blockedLists+=('ipsum-1.ipset');
+blockedLists+=('ipsum-1.ipset');
 
 #Countries
 blockedCountries=();
@@ -73,38 +73,25 @@ createWorkDirectory() {
 	cd /tmp/scfw3;
 }
 
-#https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/sec-setting_and_controlling_ip_sets_using_firewalld
-importListToFirewall() {
+importList() {
 	echo "Importing $1";
-	name=$1;
 	url=$2;
-	if [ "$3" = "true" ]; then inet="--option=family=inet6"; else inet="--option=family=inet"; fi;
-	if [ ! -f "$name" ]; then
-		#Remove comments, empty lines, and leading zeroes
-		#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
-		#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
-		if [[ "$list" == "threatview.ipset" ]]; then
-			/usr/bin/wget -O - "$url" | grep -v -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' > "$name";
-		elif [[ "$list" == "vpn_a.ipset" ]]; then
-			/usr/bin/wget -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' > "$name";
-		else
-			/usr/bin/wget -O - "$url" | grep -v -e '^#' -e '^[[:space:]]*$' > "$name";
-		fi;
+	#Remove comments, empty lines, and leading zeroes
+	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
+	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
+	if [[ "$list" == "threatview.ipset" ]]; then
+		/usr/bin/wget -4 --compression=auto -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
+	elif [[ "$list" == "vpn_a.ipset" ]]; then
+		/usr/bin/wget -4 --compression=auto -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+	else
+		/usr/bin/wget -4 --compression=auto -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	fi;
-	removeAllowedEntries "$name";
-	firewall-cmd --permanent --delete-ipset="$name" &>/dev/null || true;
-	firewall-cmd --permanent --new-ipset="$name" --type=hash:net --option=maxelem=200000 --option=hashsize=16384 $inet;
-	firewall-cmd --permanent --ipset="$name" --add-entries-from-file="$name";
-	firewall-cmd --permanent --zone=scfw --add-source=ipset:"$name";
-	unset inet;
-	sleep 2;
 }
 
 importCountryList() {
-	echo "Importing $1";
 	countryCode="$1";
-	importListToFirewall country-block-v4-"$countryCode" "https://www.ipdeny.com/ipblocks/data/aggregated/$countryCode-aggregated.zone";
-	#importListToFirewall country-block-v6-"$countryCode" "https://www.ipdeny.com/ipv6/ipaddresses/blocks/$countryCode.zone" true;
+	importList country-block-v4-"$countryCode" "https://www.ipdeny.com/ipblocks/data/aggregated/$countryCode-aggregated.zone";
+	#importList country-block-v6-"$countryCode" "https://www.ipdeny.com/ipv6/ipaddresses/blocks/$countryCode.zone" true;
 }
 
 prepareTorExclusion() {
@@ -125,92 +112,79 @@ removeAllowedEntries() {
 		rm "$1.orig";
 		wc -l "$1";
 	fi;
+	if [ -f /usr/local/bin/ip-aggregator.py ]; then
+		mv "$1" "$1.orig";
+		cat "$1.orig" | python3 /usr/local/bin/ip-aggregator.py --stdin --quiet --sort > "$1";
+		rm "$1.orig";
+		wc -l "$1";
+	fi;
 }
 
 loadLists() {
-	#Remove old lists+zone
-	clearLists;
-
 	#Create the needed directories
 	createWorkDirectory;
 
-	#Setup the zone
-	firewall-cmd --new-zone=scfw --permanent || true;
-	firewall-cmd --zone=scfw --set-target=DROP --permanent;
-
+	#Setup exclusions
 	if [ ! -f /etc/scfw-exclusions.grep ]; then
 		echo -e '^127\.0\.0\.1$\n^0\.0\.0\.0/8$\n^10\.0\.0\.0/8$\n^172\.16\.0\.0/12$\n^192\.168\.0\.0/16$\n^169\.254\.0\.0/16$\n^100\.64\.0\.0/10$\n^fd00::/7$\n^fd00::/8$\n^fe80::/10$' > /etc/scfw-exclusions.grep;
 	fi;
 	if [ "$SCFW_BLOCK_TOR" = false ]; then prepareTorExclusion; fi;
 
+	#Download the lists
 	for list in "${blockedLists[@]}"
 	do
 		if [[ "$list" == "cinscore.ipset" ]]; then
-			importListToFirewall "$list" "https://cinsscore.com/list/ci-badguys.txt";
+			importList "$list" "https://cinsscore.com/list/ci-badguys.txt";
 		elif [[ "$list" == "feodo.ipset" ]]; then
-			importListToFirewall "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
+			importList "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
 		elif [[ "$list" == "ipsum-1.ipset" ]]; then
-			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/1.txt";
+			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/1.txt";
 		elif [[ "$list" == "ipsum-2.ipset" ]]; then
-			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/2.txt";
+			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/2.txt";
 		elif [[ "$list" == "ipsum-3.ipset" ]]; then
-			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/3.txt";
+			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/3.txt";
 		elif [[ "$list" == "ipsum-4.ipset" ]]; then
-			importListToFirewall "$list" "https://github.com/stamparm/ipsum/raw/master/levels/4.txt";
+			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/4.txt";
 		elif [[ "$list" == "sslbl.ipset" ]]; then
-			importListToFirewall "$list" "https://sslbl.abuse.ch/blacklist/sslipblacklist.txt";
+			importList "$list" "https://sslbl.abuse.ch/blacklist/sslipblacklist.txt";
 		elif [[ "$list" == "threatview.ipset" ]]; then
-			importListToFirewall "$list" "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt";
+			importList "$list" "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt";
 		elif [[ "$list" == "vpn_a.ipset" ]]; then
-			importListToFirewall "$list" "https://github.com/az0/vpn_ip/raw/main/data/output/ip.txt";
+			importList "$list" "https://github.com/az0/vpn_ip/raw/main/data/output/ip.txt";
 		elif [[ "$list" == "vpn_x.ipset" ]]; then
-			importListToFirewall "$list" "https://github.com/X4BNet/lists_vpn/raw/main/output/vpn/ipv4.txt";
+			importList "$list" "https://github.com/X4BNet/lists_vpn/raw/main/output/vpn/ipv4.txt";
 		else
-			importListToFirewall "$list" "https://iplists.firehol.org/files/$list";
+			importList "$list" "https://iplists.firehol.org/files/$list";
 		fi;
 	done;
 
+	#Download the country lists
 	for country in "${blockedCountries[@]}"
 	do
 		importCountryList "$country";
 	done;
 
+	#Cleanup
+	sort -u -o "scfw3-combined" "scfw3-combined";
+	removeAllowedEntries "scfw3-combined";
+
+	#Remove old lists+zone
+	firewall-cmd --delete-zone=scfw --permanent &>/dev/null || true;
+	firewall-cmd --permanent --delete-ipset="scfw3-combined" &>/dev/null || true;
+	firewall-cmd --reload;
+
+	#Import the combined ipset
+	#https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/sec-setting_and_controlling_ip_sets_using_firewalld
+	firewall-cmd --new-zone=scfw --permanent;
+	firewall-cmd --zone=scfw --set-target=DROP --permanent;
+	firewall-cmd --permanent --new-ipset="scfw3-combined" --type=hash:net --option=maxelem=600000 --option=hashsize=16384 --option=family=inet;
+	firewall-cmd --permanent --ipset="scfw3-combined" --add-entries-from-file="scfw3-combined";
+	firewall-cmd --permanent --zone=scfw --add-source=ipset:"scfw3-combined";
+
 	#Reload to apply
 	firewall-cmd --reload;
 	echo "[SCFW3] Loaded";
 }
-
-clearLists() {
-	for list in "${blockedLists[@]}"
-	do
-		firewall-cmd --permanent --delete-ipset="$list" &>/dev/null || true;
-	done;
-
-	for country in "${blockedCountries[@]}"
-	do
-		firewall-cmd --permanent --delete-ipset="country-block-v4-$list" &>/dev/null || true;
-		firewall-cmd --permanent --delete-ipset="country-block-v6-$list" &>/dev/null || true;
-	done;
-
-	#Delete the zone
-	firewall-cmd --delete-zone=scfw --permanent || true;
-
-	#Reload to apply
-	firewall-cmd --reload;
-	echo "[SCFW3] Unloaded";
-}
-
-#Friendly prompt
-#if [ "$1" = "enable" ]; then
-#	loadLists;
-#elif [ "$1" = "enableforce" ]; then
-#	rm -rfv /tmp/scfw3;
-#	loadLists;
-#elif [ "$1" = "disable" ]; then
-#	clearLists;
-#else
-#	echo "Options are: enable, enableforce, disable";
-#fi;
 
 #Just run as expected
 rm -rfv /tmp/scfw3;
