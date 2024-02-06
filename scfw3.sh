@@ -46,6 +46,7 @@ blockedLists+=('vxvault.ipset');
 blockedLists+=('xroxy_30d.ipset');
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
 #<25k entries
+blockedLists+=('blackhole_monster.ipset');
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
 #blockedLists+=('ipsum-3.ipset');
@@ -133,7 +134,9 @@ loadLists() {
 	#Download the lists
 	for list in "${blockedLists[@]}"
 	do
-		if [[ "$list" == "cinscore.ipset" ]]; then
+		if [[ "$list" == "blackhole_monster.ipset" ]]; then
+			importList "$list" "https://ip.blackhole.monster/blackhole-today";
+		elif [[ "$list" == "cinscore.ipset" ]]; then
 			importList "$list" "https://cinsscore.com/list/ci-badguys.txt";
 		elif [[ "$list" == "feodo.ipset" ]]; then
 			importList "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
