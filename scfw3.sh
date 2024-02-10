@@ -20,6 +20,7 @@ export SCFW_BLOCK_TOR=false;
 #Lists
 #<10k entries
 blockedLists+=('bds_atif.ipset');
+blockedLists+=('bitcoin_nodes.ipset');
 blockedLists+=('botvrij_dst.ipset');
 blockedLists+=('bruteforceblocker.ipset');
 blockedLists+=('cidr_report_bogons.netset');
@@ -27,9 +28,11 @@ blockedLists+=('cybercrime.ipset');
 blockedLists+=('dyndns_ponmocup.ipset');
 blockedLists+=('et_block.netset');
 blockedLists+=('et_compromised.ipset');
+blockedLists+=('et_dshield.netset');
 blockedLists+=('feodo.ipset');
 blockedLists+=('gpf_comics.ipset');
 blockedLists+=('greensnow.ipset');
+blockedLists+=('iblocklist_spyware.ipset');
 #blockedLists+=('ipsum-4.ipset');
 blockedLists+=('myip.ipset');
 blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
@@ -80,7 +83,9 @@ importList() {
 	#Remove comments, empty lines, and leading zeroes
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
-	if [[ "$list" == "threatview.ipset" ]]; then
+	if [[ "$list" == "iblocklist"* ]]; then
+		/usr/bin/wget -4 --compression=auto -O - "$url" | zcat | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+	elif [[ "$list" == "threatview.ipset" ]]; then
 		/usr/bin/wget -4 --compression=auto -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
 	elif [[ "$list" == "vpn_a.ipset" ]]; then
 		/usr/bin/wget -4 --compression=auto -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
@@ -140,6 +145,8 @@ loadLists() {
 			importList "$list" "https://cinsscore.com/list/ci-badguys.txt";
 		elif [[ "$list" == "feodo.ipset" ]]; then
 			importList "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
+		elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
+			importList "$list" "https://list.iblocklist.com/?list=llvtlsjyoyiczbkjsxpf&fileformat=cidr&archiveformat=gz";
 		elif [[ "$list" == "ipsum-1.ipset" ]]; then
 			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/1.txt";
 		elif [[ "$list" == "ipsum-2.ipset" ]]; then
