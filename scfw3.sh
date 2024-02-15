@@ -24,6 +24,7 @@ blockedLists+=('bitcoin_nodes.ipset');
 blockedLists+=('botvrij_dst.ipset');
 blockedLists+=('bruteforceblocker.ipset');
 blockedLists+=('cidr_report_bogons.netset');
+blockedLists+=('cybercure.ipset');
 blockedLists+=('cybercrime.ipset');
 blockedLists+=('dyndns_ponmocup.ipset');
 blockedLists+=('et_block.netset');
@@ -37,6 +38,7 @@ blockedLists+=('iblocklist_spyware.ipset');
 blockedLists+=('myip.ipset');
 blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
 blockedLists+=('sblam.ipset');
+blockedLists+=('snort.ipset');
 blockedLists+=('socks_proxy_30d.ipset');
 blockedLists+=('spamhaus_drop.netset');
 blockedLists+=('spamhaus_edrop.netset');
@@ -83,7 +85,9 @@ importList() {
 	#Remove comments, empty lines, and leading zeroes
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
-	if [[ "$list" == "iblocklist"* ]]; then
+	if [[ "$list" == "cybercure.ipset" ]]; then
+		/usr/bin/wget -4 --compression=auto -O - "$url" | sed 's/,/\n/g' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+	elif [[ "$list" == "iblocklist"* ]]; then
 		/usr/bin/wget -4 --compression=auto -O - "$url" | zcat | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "threatview.ipset" ]]; then
 		/usr/bin/wget -4 --compression=auto -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
@@ -143,6 +147,8 @@ loadLists() {
 			importList "$list" "https://ip.blackhole.monster/blackhole-today";
 		elif [[ "$list" == "cinscore.ipset" ]]; then
 			importList "$list" "https://cinsscore.com/list/ci-badguys.txt";
+		elif [[ "$list" == "cybercure.ipset" ]]; then
+			importList "$list" "https://api.cybercure.ai/feed/get_ips?type=csv";
 		elif [[ "$list" == "feodo.ipset" ]]; then
 			importList "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
 		elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
@@ -155,6 +161,8 @@ loadLists() {
 			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/3.txt";
 		elif [[ "$list" == "ipsum-4.ipset" ]]; then
 			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/4.txt";
+		elif [[ "$list" == "snort.ipset" ]]; then
+			importList "$list" "https://snort.org/downloads/ip-block-list";
 		elif [[ "$list" == "sslbl.ipset" ]]; then
 			importList "$list" "https://sslbl.abuse.ch/blacklist/sslipblacklist.txt";
 		elif [[ "$list" == "threatview.ipset" ]]; then
