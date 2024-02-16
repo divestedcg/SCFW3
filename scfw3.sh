@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+#VERSION: 20240216-01
+#
 #Copyright (c) 2021-2024 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
@@ -36,7 +39,9 @@ blockedLists+=('gpf_comics.ipset');
 blockedLists+=('greensnow.ipset');
 blockedLists+=('iblocklist_spyware.ipset');
 #blockedLists+=('ipsum-4.ipset');
+blockedLists+=('ipthreat.ipset');
 blockedLists+=('myip.ipset');
+blockedLists+=('nixspam.ipset');
 blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
 blockedLists+=('sblam.ipset');
 blockedLists+=('snort.ipset');
@@ -83,18 +88,28 @@ createWorkDirectory() {
 importList() {
 	echo "Importing $1";
 	url=$2;
-	#Remove comments, empty lines, and leading zeroes
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
 	if [[ "$list" == "cybercure.ipset" ]]; then
+		#Download, replace commas with newlines, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --compression=auto -O - "$url" | sed 's/,/\n/g' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "iblocklist"* ]]; then
+		#Download, decompress, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --compression=auto -O - "$url" | zcat | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+	elif [[ "$list" == "ipthreat.ipset" ]]; then
+		#Download, decompress, filter first column, strip IPv6 addresses + comments + whitespace + hyphenated ranges
+		/usr/bin/wget -4 --compression=auto -O - "$url" | zcat | awk '{print $1}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' -e "-" >> "scfw3-combined";
+	elif [[ "$list" == "nixspam.ipset" ]]; then
+		#Download, decompress, filter second column, strip IPv6 addresses + comments + whitespace
+		/usr/bin/wget -4 --compression=auto -O - "$url" | zcat | awk '{print $2}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "threatview.ipset" ]]; then
+		#Download, strip IPv6 addresses + comments + whitespace, strip leading zeroes in addresses
 		/usr/bin/wget -4 --compression=auto -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
 	elif [[ "$list" == "vpn_a.ipset" ]]; then
+		#Download, strip in-line comments, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --compression=auto -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	else
+		#Download, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --compression=auto -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	fi;
 }
@@ -164,6 +179,10 @@ loadLists() {
 			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/3.txt";
 		elif [[ "$list" == "ipsum-4.ipset" ]]; then
 			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/4.txt";
+		elif [[ "$list" == "ipthreat.ipset" ]]; then
+			importList "$list" "https://lists.ipthreat.net/file/ipthreat-lists/threat/threat-30.txt.gz";
+		elif [[ "$list" == "nixspam.ipset" ]]; then
+			importList "$list" "https://www.nixspam.net/download/nixspam-ip.dump.gz";
 		elif [[ "$list" == "snort.ipset" ]]; then
 			importList "$list" "https://snort.org/downloads/ip-block-list";
 		elif [[ "$list" == "sslbl.ipset" ]]; then
