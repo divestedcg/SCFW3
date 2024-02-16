@@ -19,6 +19,7 @@ export SCFW_BLOCK_TOR=false;
 
 #Lists
 #<10k entries
+blockedLists+=('3coresec.ipset');
 blockedLists+=('bds_atif.ipset');
 blockedLists+=('bitcoin_nodes.ipset');
 blockedLists+=('botvrij_dst.ipset');
@@ -143,7 +144,9 @@ loadLists() {
 	#Download the lists
 	for list in "${blockedLists[@]}"
 	do
-		if [[ "$list" == "blackhole_monster.ipset" ]]; then
+		if [[ "$list" == "3coresec.ipset" ]]; then
+			importList "$list" "https://blacklist.3coresec.net/lists/all.txt";
+		elif [[ "$list" == "blackhole_monster.ipset" ]]; then
 			importList "$list" "https://ip.blackhole.monster/blackhole-today";
 		elif [[ "$list" == "cinscore.ipset" ]]; then
 			importList "$list" "https://cinsscore.com/list/ci-badguys.txt";
