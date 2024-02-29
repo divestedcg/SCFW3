@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20240216-01
+#VERSION: 20240229-01
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -28,7 +28,7 @@ blockedLists+=('bitcoin_nodes.ipset');
 blockedLists+=('botvrij_dst.ipset');
 blockedLists+=('bruteforceblocker.ipset');
 blockedLists+=('cidr_report_bogons.netset');
-blockedLists+=('cybercure.ipset');
+#blockedLists+=('cybercure.ipset');
 blockedLists+=('cybercrime.ipset');
 blockedLists+=('dyndns_ponmocup.ipset');
 blockedLists+=('et_block.netset');
@@ -69,6 +69,7 @@ blockedLists+=('cleantalk_7d.ipset');
 #blockedLists+=('ipsum-2.ipset');
 #<100k entries
 #blockedLists+=('haley_ssh.ipset');
+blockedLists+=('voipbl.ipset');
 #<150k entries
 blockedLists+=('blocklist_net_ua.ipset');
 #blockedLists+=('stopforumspam.ipset');
@@ -189,6 +190,8 @@ loadLists() {
 			importList "$list" "https://sslbl.abuse.ch/blacklist/sslipblacklist.txt";
 		elif [[ "$list" == "threatview.ipset" ]]; then
 			importList "$list" "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt";
+		elif [[ "$list" == "voipbl.ipset" ]]; then
+			importList "$list" "https://voipbl.org/update";
 		elif [[ "$list" == "vpn_a.ipset" ]]; then
 			importList "$list" "https://github.com/az0/vpn_ip/raw/main/data/output/ip.txt";
 		elif [[ "$list" == "vpn_x.ipset" ]]; then
