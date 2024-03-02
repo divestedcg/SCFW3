@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20240229-01
+#VERSION: 20240302-01
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -52,6 +52,7 @@ blockedLists+=('sslbl.ipset');
 blockedLists+=('sslproxies_30d.ipset');
 blockedLists+=('stopforumspam_7d.ipset');
 blockedLists+=('threatview.ipset');
+blockedLists+=('turrissentinel.ipset');
 #blockedLists+=('vpn_x.ipset');
 blockedLists+=('vxvault.ipset');
 blockedLists+=('xroxy_30d.ipset');
@@ -106,6 +107,9 @@ importList() {
 	elif [[ "$list" == "threatview.ipset" ]]; then
 		#Download, strip IPv6 addresses + comments + whitespace, strip leading zeroes in addresses
 		/usr/bin/wget -4 --compression=auto -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
+	elif [[ "$list" == "turrissentinel.ipset" ]]; then
+		#Download, skip first two lines, filter first column, strip IPv6 addresses + comments + whitespace
+		/usr/bin/wget -4 --compression=auto -O - "$url" | tail -n +3 | sed 's/,.*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "vpn_a.ipset" ]]; then
 		#Download, strip in-line comments, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --compression=auto -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
@@ -190,6 +194,8 @@ loadLists() {
 			importList "$list" "https://sslbl.abuse.ch/blacklist/sslipblacklist.txt";
 		elif [[ "$list" == "threatview.ipset" ]]; then
 			importList "$list" "https://threatview.io/Downloads/IP-High-Confidence-Feed.txt";
+		elif [[ "$list" == "turrissentinel.ipset" ]]; then
+			importList "$list" "https://view.sentinel.turris.cz/greylist-data/greylist-latest.csv";
 		elif [[ "$list" == "voipbl.ipset" ]]; then
 			importList "$list" "https://voipbl.org/update";
 		elif [[ "$list" == "vpn_a.ipset" ]]; then
