@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20240304-01
+#VERSION: 20240416-01
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -37,6 +37,7 @@ blockedLists+=('et_dshield.netset');
 blockedLists+=('feodo.ipset');
 blockedLists+=('gpf_comics.ipset');
 blockedLists+=('greensnow.ipset');
+blockedLists+=('haley_ssh_30d.ipset');
 blockedLists+=('iblocklist_spyware.ipset');
 #blockedLists+=('ipsum-4.ipset');
 blockedLists+=('ipthreat.ipset');
@@ -95,6 +96,9 @@ importList() {
 	if [[ "$list" == "cybercure.ipset" ]]; then
 		#Download, replace commas with newlines, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | sed 's/,/\n/g' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+	elif [[ "$list" == "haley_ssh_30d.ipset" ]]; then
+		#Download, skip first line, filter third column, strip IPv6 addresses + comments + whitespace
+		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | tail -n +2 | awk '{print $3}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
 		#Download, decompress, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
@@ -174,6 +178,8 @@ loadLists() {
 			importList "$list" "https://api.cybercure.ai/feed/get_ips?type=csv";
 		elif [[ "$list" == "feodo.ipset" ]]; then
 			importList "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
+		elif [[ "$list" == "haley_ssh_30d.ipset" ]]; then
+			importList "$list" "https://charles.the-haleys.org/ssh_dico_attack_with_timestamps.php?days=30";
 		elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
 			importList "$list" "https://list.iblocklist.com/?list=llvtlsjyoyiczbkjsxpf&fileformat=cidr&archiveformat=gz";
 		elif [[ "$list" == "ipsum-1.ipset" ]]; then
