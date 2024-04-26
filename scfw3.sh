@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20240416-01
+#VERSION: 20240426-03
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -18,7 +18,9 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #TODO: Enable/Fixup IPv6 support
+export SCFW_BLOCK_PROXY=true;
 export SCFW_BLOCK_TOR=false;
+export SCFW_BLOCK_VPN=false;
 
 #Lists
 #<10k entries
@@ -46,24 +48,25 @@ blockedLists+=('nixspam.ipset');
 blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
 blockedLists+=('sblam.ipset');
 blockedLists+=('snort.ipset');
-blockedLists+=('socks_proxy_30d.ipset');
+if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('socks_proxy_30d.ipset'); fi;
 blockedLists+=('spamhaus_drop.netset');
 blockedLists+=('spamhaus_edrop.netset');
 blockedLists+=('sslbl.ipset');
-blockedLists+=('sslproxies_30d.ipset');
+if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('sslproxies_30d.ipset'); fi;
 blockedLists+=('stopforumspam_7d.ipset');
 blockedLists+=('threatview.ipset');
 blockedLists+=('turrissentinel.ipset');
-#blockedLists+=('vpn_x.ipset');
+if [ "$SCFW_BLOCK_VPN" = true ]; then blockedLists+=('vpn_x.ipset'); fi;
 blockedLists+=('vxvault.ipset');
-blockedLists+=('xroxy_30d.ipset');
+if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('xroxy_30d.ipset'); fi;
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
 #<25k entries
 blockedLists+=('blackhole_monster.ipset');
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
 #blockedLists+=('ipsum-3.ipset');
-#blockedLists+=('vpn_a.ipset');
+if [ "$SCFW_BLOCK_VPN" = true ]; then blockedLists+=('vpn_a.ipset'); fi;
+if [ "$SCFW_BLOCK_VPN" = true ]; then blockedLists+=('vpn_l.ipset'); fi;
 #<50k entries
 blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
@@ -95,31 +98,34 @@ importList() {
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
 	if [[ "$list" == "cybercure.ipset" ]]; then
 		#Download, replace commas with newlines, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | sed 's/,/\n/g' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | sed 's/,/\n/g' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "haley_ssh_30d.ipset" ]]; then
 		#Download, skip first line, filter third column, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | tail -n +2 | awk '{print $3}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | tail -n +2 | awk '{print $3}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
 		#Download, decompress, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "ipthreat.ipset" ]]; then
 		#Download, decompress, filter first column, strip IPv6 addresses + comments + whitespace + hyphenated ranges
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | awk '{print $1}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' -e "-" >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | awk '{print $1}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' -e "-" >> "scfw3-combined";
 	elif [[ "$list" == "nixspam.ipset" ]]; then
 		#Download, decompress, filter second column, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | awk '{print $2}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | awk '{print $2}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "threatview.ipset" ]]; then
 		#Download, strip IPv6 addresses + comments + whitespace, strip leading zeroes in addresses
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
 	elif [[ "$list" == "turrissentinel.ipset" ]]; then
 		#Download, skip first two lines, filter first column, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | tail -n +3 | sed 's/,.*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | tail -n +3 | sed 's/,.*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "vpn_a.ipset" ]]; then
 		#Download, strip in-line comments, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+	elif [[ "$list" == "vpn_l.ipset" ]]; then
+		#Download, skip first line, filter first column, strip IPv6 addresses + comments + whitespace
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | tail -n +2 | sed 's/,.*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	else
 		#Download, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --compression=auto --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	fi;
 }
 
@@ -206,6 +212,8 @@ loadLists() {
 			importList "$list" "https://voipbl.org/update";
 		elif [[ "$list" == "vpn_a.ipset" ]]; then
 			importList "$list" "https://github.com/az0/vpn_ip/raw/main/data/output/ip.txt";
+		elif [[ "$list" == "vpn_l.ipset" ]]; then
+			importList "$list" "https://github.com/Lars-/PIA-servers/raw/master/export.csv";
 		elif [[ "$list" == "vpn_x.ipset" ]]; then
 			importList "$list" "https://github.com/X4BNet/lists_vpn/raw/main/output/vpn/ipv4.txt";
 		else
