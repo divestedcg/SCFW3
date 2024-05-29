@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20240426-03
+#VERSION: 20240529-00
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -18,9 +18,9 @@
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #TODO: Enable/Fixup IPv6 support
-export SCFW_BLOCK_PROXY=true;
-export SCFW_BLOCK_TOR=false;
-export SCFW_BLOCK_VPN=false;
+export SCFW_BLOCK_PROXY=true; #Junk proxies
+export SCFW_BLOCK_TOR=false; #Tor exits and other nodes, when false these are excluded from others
+export SCFW_BLOCK_VPN=false; #Common VPN providers
 
 #Lists
 #<10k entries
@@ -61,16 +61,16 @@ blockedLists+=('vxvault.ipset');
 if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('xroxy_30d.ipset'); fi;
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
 #<25k entries
-blockedLists+=('blackhole_monster.ipset');
+#blockedLists+=('blackhole_monster.ipset'); #dead
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
+blockedLists+=('cleantalk_7d.ipset');
 #blockedLists+=('ipsum-3.ipset');
 if [ "$SCFW_BLOCK_VPN" = true ]; then blockedLists+=('vpn_a.ipset'); fi;
 if [ "$SCFW_BLOCK_VPN" = true ]; then blockedLists+=('vpn_l.ipset'); fi;
 #<50k entries
 blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
-blockedLists+=('cleantalk_7d.ipset');
 #blockedLists+=('ipsum-2.ipset');
 #<100k entries
 #blockedLists+=('haley_ssh.ipset');
