@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20240529-00
+#VERSION: 20240930-01
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -19,8 +19,10 @@
 
 #TODO: Enable/Fixup IPv6 support
 export SCFW_BLOCK_PROXY=true; #Junk proxies
-export SCFW_BLOCK_TOR=false; #Tor exits and other nodes, when false these are excluded from others
+export SCFW_BLOCK_TOR=false; #Tor exits and other nodes
 export SCFW_BLOCK_VPN=false; #Common VPN providers
+export SCFW_EXCLUDE_TOR=true; #Explicitely exempt Tor nodes
+export SCFW_EXCLUDE_VPN=true; #Explicitely exempt common VPN providers
 
 #Lists
 #<10k entries
@@ -135,17 +137,31 @@ importCountryList() {
 	#importList country-block-v6-"$countryCode" "https://www.ipdeny.com/ipv6/ipaddresses/blocks/$countryCode.zone" true;
 }
 
-prepareTorExclusion() {
-	wget "https://iplists.firehol.org/files/tor_exits.ipset" -O - | grep -v '^#' | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' > tor_exclusions.grep;
+prepareExclusions() {
+	#rm -f exclusions.grep exclusions.txt;
+	if [ "$SCFW_BLOCK_TOR" = false ] && [ "$SCFW_EXCLUDE_TOR" = true ]; then
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "https://iplists.firehol.org/files/tor_exits.ipset" | grep -v '^#' >> exclusions.txt;
+	fi;
+	if [ "$SCFW_BLOCK_VPN" = false ] && [ "$SCFW_EXCLUDE_VPN" = true ]; then
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "https://github.com/az0/vpn_ip/raw/main/data/output/ip.txt" | sed 's/ # .*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> exclusions.txt;
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "https://github.com/Lars-/PIA-servers/raw/master/export.csv" | tail -n +2 | sed 's/,.*//' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> exclusions.txt;
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "https://github.com/X4BNet/lists_vpn/raw/main/output/vpn/ipv4.txt" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> exclusions.txt;
+	fi;
+	if [ -f exclusions.txt ]; then
+		cat exclusions.txt | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' | sort -u > exclusions.grep;
+		wc -l exclusions.grep;
+	fi;
 }
 
 removeAllowedEntries() {
 	wc -l "$1";
-	if [ "$SCFW_BLOCK_TOR" = false ]; then
-		mv "$1" "$1.orig";
-		grep -v -f tor_exclusions.grep "$1.orig" > "$1";
-		rm "$1.orig";
-		wc -l "$1";
+	if [ -f /tmp/scfw3/exclusions.grep ]; then
+		if [ "$SCFW_EXCLUDE_TOR" = true ] || [ "$SCFW_EXCLUDE_VPN" = true ]; then
+			mv "$1" "$1.orig";
+			grep -v -f exclusions.grep "$1.orig" > "$1";
+			rm "$1.orig";
+			wc -l "$1";
+		fi;
 	fi;
 	if [ -f /etc/scfw-exclusions.grep ]; then
 		mv "$1" "$1.orig";
@@ -169,7 +185,7 @@ loadLists() {
 	if [ ! -f /etc/scfw-exclusions.grep ]; then
 		echo -e '^127\.0\.0\.1$\n^0\.0\.0\.0/8$\n^10\.0\.0\.0/8$\n^172\.16\.0\.0/12$\n^192\.168\.0\.0/16$\n^169\.254\.0\.0/16$\n^100\.64\.0\.0/10$\n^fd00::/7$\n^fd00::/8$\n^fe80::/10$' > /etc/scfw-exclusions.grep;
 	fi;
-	if [ "$SCFW_BLOCK_TOR" = false ]; then prepareTorExclusion; fi;
+	prepareExclusions;
 
 	#Download the lists
 	for list in "${blockedLists[@]}"
