@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20240930-01
+#VERSION: 20250219-01
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -26,13 +26,12 @@ export SCFW_EXCLUDE_VPN=true; #Explicitely exempt common VPN providers
 
 #Lists
 #<10k entries
-blockedLists+=('3coresec.ipset');
 blockedLists+=('bds_atif.ipset');
 blockedLists+=('bitcoin_nodes.ipset');
 blockedLists+=('botvrij_dst.ipset');
 blockedLists+=('bruteforceblocker.ipset');
-blockedLists+=('cidr_report_bogons.netset');
-#blockedLists+=('cybercure.ipset');
+#blockedLists+=('cidr_report_bogons.netset'); #broken sometimes
+#blockedLists+=('cybercure.ipset'); #demo
 blockedLists+=('cybercrime.ipset');
 blockedLists+=('dyndns_ponmocup.ipset');
 blockedLists+=('et_block.netset');
@@ -41,12 +40,10 @@ blockedLists+=('et_dshield.netset');
 blockedLists+=('feodo.ipset');
 blockedLists+=('gpf_comics.ipset');
 blockedLists+=('greensnow.ipset');
-blockedLists+=('haley_ssh_30d.ipset');
 blockedLists+=('iblocklist_spyware.ipset');
 #blockedLists+=('ipsum-4.ipset');
 blockedLists+=('ipthreat.ipset');
 blockedLists+=('myip.ipset');
-blockedLists+=('nixspam.ipset');
 blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
 blockedLists+=('sblam.ipset');
 blockedLists+=('snort.ipset');
@@ -63,7 +60,6 @@ blockedLists+=('vxvault.ipset');
 if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('xroxy_30d.ipset'); fi;
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
 #<25k entries
-#blockedLists+=('blackhole_monster.ipset'); #dead
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
 blockedLists+=('cleantalk_7d.ipset');
@@ -75,7 +71,6 @@ blockedLists+=('blocklist_de.ipset');
 blockedLists+=('ciarmy.ipset');
 #blockedLists+=('ipsum-2.ipset');
 #<100k entries
-#blockedLists+=('haley_ssh.ipset');
 blockedLists+=('voipbl.ipset');
 #<150k entries
 blockedLists+=('blocklist_net_ua.ipset');
@@ -101,18 +96,12 @@ importList() {
 	if [[ "$list" == "cybercure.ipset" ]]; then
 		#Download, replace commas with newlines, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | sed 's/,/\n/g' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
-	elif [[ "$list" == "haley_ssh_30d.ipset" ]]; then
-		#Download, skip first line, filter third column, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | tail -n +2 | awk '{print $3}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
 		#Download, decompress, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "ipthreat.ipset" ]]; then
 		#Download, decompress, filter first column, strip IPv6 addresses + comments + whitespace + hyphenated ranges
 		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | awk '{print $1}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' -e "-" >> "scfw3-combined";
-	elif [[ "$list" == "nixspam.ipset" ]]; then
-		#Download, decompress, filter second column, strip IPv6 addresses + comments + whitespace
-		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | zcat | awk '{print $2}' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "threatview.ipset" ]]; then
 		#Download, strip IPv6 addresses + comments + whitespace, strip leading zeroes in addresses
 		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' >> "scfw3-combined";
@@ -190,18 +179,12 @@ loadLists() {
 	#Download the lists
 	for list in "${blockedLists[@]}"
 	do
-		if [[ "$list" == "3coresec.ipset" ]]; then
-			importList "$list" "https://blacklist.3coresec.net/lists/all.txt";
-		elif [[ "$list" == "blackhole_monster.ipset" ]]; then
-			importList "$list" "https://ip.blackhole.monster/blackhole-today";
-		elif [[ "$list" == "cinscore.ipset" ]]; then
+		if [[ "$list" == "cinscore.ipset" ]]; then
 			importList "$list" "https://cinsscore.com/list/ci-badguys.txt";
 		elif [[ "$list" == "cybercure.ipset" ]]; then
 			importList "$list" "https://api.cybercure.ai/feed/get_ips?type=csv";
 		elif [[ "$list" == "feodo.ipset" ]]; then
 			importList "$list" "https://feodotracker.abuse.ch/downloads/ipblocklist.txt";
-		elif [[ "$list" == "haley_ssh_30d.ipset" ]]; then
-			importList "$list" "https://charles.the-haleys.org/ssh_dico_attack_with_timestamps.php?days=30";
 		elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
 			importList "$list" "https://list.iblocklist.com/?list=llvtlsjyoyiczbkjsxpf&fileformat=cidr&archiveformat=gz";
 		elif [[ "$list" == "ipsum-1.ipset" ]]; then
@@ -214,8 +197,6 @@ loadLists() {
 			importList "$list" "https://github.com/stamparm/ipsum/raw/master/levels/4.txt";
 		elif [[ "$list" == "ipthreat.ipset" ]]; then
 			importList "$list" "https://lists.ipthreat.net/file/ipthreat-lists/threat/threat-30.txt.gz";
-		elif [[ "$list" == "nixspam.ipset" ]]; then
-			importList "$list" "https://www.nixspam.net/download/nixspam-ip.dump.gz";
 		elif [[ "$list" == "snort.ipset" ]]; then
 			importList "$list" "https://snort.org/downloads/ip-block-list";
 		elif [[ "$list" == "sslbl.ipset" ]]; then
