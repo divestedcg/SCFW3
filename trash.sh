@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#VERSION: 20240229-01
+#VERSION: 20250320-04
 #
-#Copyright (c) 2023-2024 Divested Computing Group
+#Copyright (c) 2023-2025 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU Affero General Public License as published by
@@ -25,6 +25,11 @@ badStrings+=("compatible; Optimizer");
 
 #"All" bots
 #badStrings+=("bot/" "bot;");
+
+#AI crawlers
+#Credit: ai.robots.txt, License: MIT
+#https://github.com/ai-robots-txt/ai.robots.txt/blob/main/robots.txt
+badStrings+=("AI2Bot" "Ai2Bot-Dolma" "Amazonbot/" "anthropic-ai" "Brightbot 1.0" "ChatGPT-User" "Claude-Web" "ClaudeBot/" "cohere-ai" "cohere-training-data-crawler" "Crawlspace" "FriendlyCrawler" "GPTBot/" "iaskspider/2.0" "ICC-Crawler" "ImagesiftBot" "img2dataset" "ISSCyberRiskCrawler" "Kangaroo Bot" "Meta-ExternalAgent/" "OAI-SearchBot" "omgilibot" "PanguBot" "PerplexityBot" "SemrushBot-OCOB" "SemrushBot-SWA" "Sidetrade indexer bot" "VelenPublicWebCrawler" "Webzio-Extended" "YouBot");
 
 #Search Engines
 #badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "coccocbot-image/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "GoogleOther" "Google-SearchByImage" "https://developers\.google\.com/+/web/snippet/" "MojeekBot/" "Qwantify/" "Qwantify-prod/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
@@ -78,46 +83,44 @@ badStrings+=("QR Scanner Android");
 badStrings+=("/wp-login\.php");
 
 #Outdated macOS, https://endoflife.date/macos
-for version in {1..12} #macOS 10.12 was EOL 2019/10/01
+for version in {1..14} #macOS 10.14 was EOL 2021/10/25
 do
 	badStrings+=("Macintosh; Intel Mac OS X 10_$version""_");
 done
 
 #Outdated iOS, https://endoflife.date/ios
-for version in {1..13} #iOS 13 was EOL 2020/09/16
+for version in {1..14} #iOS 14 was EOL 2021/10/01
 do
-	if [[ $version != "12" ]]; then
-		badStrings+=("iPhone OS $version""_");
-	fi;
+	badStrings+=("iPhone OS $version""_");
 done
 
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
-for version in {1..100} #Chrome 101 reached stable on 2022/04/26
+for version in {1..130} #Chrome 130 reached stable on 2024/10/15
 do
 	#Exclude:
-	#108: last version of popular Bromite
+	#LTS: 126
 	#49: last version for Windows XP/Vista
 	#81: last version for Android KitKat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
 	#95: last version for Android Lolipop, https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
 	#106: last version for Android Marshmallow, https://groups.google.com/a/chromium.org/g/chromium-dev/c/z_RvoPoIeoM
 	#109: last version for Windows 7/8
 	#119: last version for Android Nougat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
-	if [[ $version != "108" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]]; then
+	if [[ $version != "126" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
-for version in {1..100} #Firefox 101 reached stable on 2022/05/31
+for version in {1..130} #Firefox 130 reached stable on 2024/09/03
 do
 	#Exclude:
-	#Next ESR: 128
-	#Current ESR: 115
-	#Previous two ESR: 102, 91
+	#Next ESR: 140
+	#Current ESR: 128
+	#Previous two ESR: 115, 102
 	#115: last version for Windows 7/8, https://support.mozilla.org/en-US/kb/firefox-users-windows-7-8-and-81-moving-extended-support
 	#68: last version for Android KitKat
 	#52: last version for Windows XP/Vista, https://support.mozilla.org/en-US/kb/end-support-windows-xp-and-vista
-	if [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "91" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then #
+	if [[ $version != "140" ]] && [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
@@ -126,16 +129,16 @@ done
 if [ -d "/var/log/httpd/" ]; then
 	for badString in "${badStrings[@]}"
 	do
-		mapfile -t -O "${#trash[@]}" trash < <( grep -i "$badString" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
+		mapfile -t -O "${#trash[@]}" trash < <( grep -a -i "$badString" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
 	done
 
 	#Filter out all non HEAD & GET requests
-	mapfile -t -O "${#trash[@]}" trash < <( grep -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
+	mapfile -t -O "${#trash[@]}" trash < <( grep -a -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
 fi;
 
 #Search for the trash in rsyncd logs
 if [ -f "/var/log/rsyncd.log" ]; then
-	mapfile -t -O "${#trash[@]}" trash < <( grep denied /var/log/rsyncd.log | awk '{ print $11 } ' | sort -u | sed 's/(//' | sed 's/)//' );
+	mapfile -t -O "${#trash[@]}" trash < <( grep -a denied /var/log/rsyncd.log | awk '{ print $11 } ' | sort -u | sed 's/(//' | sed 's/)//' );
 fi;
 
 #Search for the trash in murmur logs
