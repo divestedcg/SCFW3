@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250812-00
+#VERSION: 20250812-01
 #
 #Copyright (c) 2023-2025 Divested Computing Group
 #
@@ -27,9 +27,9 @@ badStrings+=("compatible; Optimizer");
 #badStrings+=("bot/" "bot;");
 
 #AI crawlers
-#Credit: ai.robots.txt, License: MIT, 693289bb29c42b7a526d8210d1f743ca3608690d
+#Credit: ai.robots.txt, License: MIT, ff9fc264041ba06d1f4d4f46834ee73e35efc792
 #https://github.com/ai-robots-txt/ai.robots.txt/blob/main/robots.txt
-badStrings+=("AI2Bot" "Ai2Bot-Dolma" "Amazonbot/" "anthropic-ai" "Brightbot 1.0" "ChatGPT-User" "Claude-Web" "ClaudeBot/" "cohere-ai" "cohere-training-data-crawler" "Crawlspace" "FriendlyCrawler" "GPTBot/" "iaskspider/2.0" "ICC-Crawler" "ImagesiftBot" "img2dataset" "ISSCyberRiskCrawler" "Kangaroo Bot" "Meta-ExternalAgent/" "OAI-SearchBot" "omgilibot" "PanguBot" "PerplexityBot" "SemrushBot-OCOB" "SemrushBot-SWA" "Sidetrade indexer bot" "VelenPublicWebCrawler" "Webzio-Extended" "YouBot");
+badStrings+=("AddSearchBot" "AI2Bot" "Ai2Bot-Dolma" "aiHitBot" "Amazonbot/" "Andibot" "anthropic-ai" "bedrockbot" "bigsur\.ai" "Brightbot 1.0" "ChatGPT Agent" "ChatGPT-User" "ClaudeBot/" "Claude-SearchBot" "Claude-User" "Claude-Web" "CloudVertexBot" "cohere-ai" "cohere-training-data-crawler" "Cotoyogi" "Crawlspace" "Datenbank Crawler" "Echobot Bot" "EchoboxBot" "Factset_spyderbot" "FirecrawlAgent" "FriendlyCrawler" "Gemini-Deep-Research" "GoogleAgent-Mariner" "Google-CloudVertexBot" "GPTBot/" "iaskspider/2.0" "ICC-Crawler" "ImagesiftBot" "img2dataset" "ISSCyberRiskCrawler" "Kangaroo Bot" "LinerBot" "Meta-ExternalAgent/" "MistralAI-User" "MyCentralAIScraperBot" "netEstate Imprint Crawler" "NovaAct" "OAI-SearchBot" "omgilibot" "PanguBot" "Panscient" "panscient\.com" "PerplexityBot" "Perplexity-User" "PhindBot" "Poseidon Research Crawler" "QualifiedBot" "QuillBot" "quillbot\.com" "SBIntuitionsBot" "SemrushBot-OCOB" "SemrushBot-SWA" "Sidetrade indexer bot" "Thinkbot" "VelenPublicWebCrawler" "WARDBot" "Webzio-Extended" "YouBot");
 
 #Search Engines
 #badStrings+=("Applebot/" "Baiduspider/" "bingbot/" "BingPreview/" "coccocbot-image/" "DuckDuckBot-Https/" "DuckDuckGo-Favicons-Bot/" "Googlebot/" "Googlebot-Image/" "Google Favicon" "GoogleImageProxy" "GoogleOther" "Google-SearchByImage" "https://developers\.google\.com/+/web/snippet/" "MojeekBot/" "Qwantify/" "Qwantify-prod/" "SeznamBot/" "yacybot" "Y!J-DLC/" "YandexBot/" "YandexFavicons/" "YandexImages/");
@@ -105,7 +105,7 @@ do
 	#106: last version for Android Marshmallow (6), https://groups.google.com/a/chromium.org/g/chromium-dev/c/z_RvoPoIeoM
 	#109: last version for Windows 7/8
 	#119: last version for Android Nougat (7), https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
-	#138: last version for Android Oreo (8) & Pie (9), https://groups.google.com/a/chromium.org/g/chromium-dev/c/vEZz0721rUY/m/pUIgqXxNBQAJ
+	#138: last version for Android Oreo (8) & Pie (9), https://groups.google.com/a/chromium.org/g/chromium-dev/c/vEZz0721rUY
 	if [[ $version != "126" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
