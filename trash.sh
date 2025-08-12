@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250320-04
+#VERSION: 20250812-00
 #
 #Copyright (c) 2023-2025 Divested Computing Group
 #
@@ -27,7 +27,7 @@ badStrings+=("compatible; Optimizer");
 #badStrings+=("bot/" "bot;");
 
 #AI crawlers
-#Credit: ai.robots.txt, License: MIT
+#Credit: ai.robots.txt, License: MIT, 693289bb29c42b7a526d8210d1f743ca3608690d
 #https://github.com/ai-robots-txt/ai.robots.txt/blob/main/robots.txt
 badStrings+=("AI2Bot" "Ai2Bot-Dolma" "Amazonbot/" "anthropic-ai" "Brightbot 1.0" "ChatGPT-User" "Claude-Web" "ClaudeBot/" "cohere-ai" "cohere-training-data-crawler" "Crawlspace" "FriendlyCrawler" "GPTBot/" "iaskspider/2.0" "ICC-Crawler" "ImagesiftBot" "img2dataset" "ISSCyberRiskCrawler" "Kangaroo Bot" "Meta-ExternalAgent/" "OAI-SearchBot" "omgilibot" "PanguBot" "PerplexityBot" "SemrushBot-OCOB" "SemrushBot-SWA" "Sidetrade indexer bot" "VelenPublicWebCrawler" "Webzio-Extended" "YouBot");
 
@@ -100,12 +100,13 @@ do
 	#Exclude:
 	#LTS: 126
 	#49: last version for Windows XP/Vista
-	#81: last version for Android KitKat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
-	#95: last version for Android Lolipop, https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
-	#106: last version for Android Marshmallow, https://groups.google.com/a/chromium.org/g/chromium-dev/c/z_RvoPoIeoM
+	#81: last version for Android KitKat (4), https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
+	#95: last version for Android Lolipop (5), https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
+	#106: last version for Android Marshmallow (6), https://groups.google.com/a/chromium.org/g/chromium-dev/c/z_RvoPoIeoM
 	#109: last version for Windows 7/8
-	#119: last version for Android Nougat, https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
-	if [[ $version != "126" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]]; then
+	#119: last version for Android Nougat (7), https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
+	#138: last version for Android Oreo (8) & Pie (9), https://groups.google.com/a/chromium.org/g/chromium-dev/c/vEZz0721rUY/m/pUIgqXxNBQAJ
+	if [[ $version != "126" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done
@@ -118,7 +119,7 @@ do
 	#Current ESR: 128
 	#Previous two ESR: 115, 102
 	#115: last version for Windows 7/8, https://support.mozilla.org/en-US/kb/firefox-users-windows-7-8-and-81-moving-extended-support
-	#68: last version for Android KitKat
+	#68: last version for Android KitKat (4)
 	#52: last version for Windows XP/Vista, https://support.mozilla.org/en-US/kb/end-support-windows-xp-and-vista
 	if [[ $version != "140" ]] && [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
 		badStrings+=("Firefox/$version\.0");
@@ -194,24 +195,25 @@ sed -i '/^127\.0\.0\.1$/d' /etc/trash-v4.ipset;
 #Print a count
 wc -l /etc/trash-*.ipset
 
-#Setup the zone
+#Remove old lists+zone
 firewall-cmd --delete-zone=trash --permanent || true;
-firewall-cmd --reload;
+firewall-cmd --permanent --delete-ipset="trash-v4" &>/dev/null || true;
+firewall-cmd --permanent --delete-ipset="trash-v6" &>/dev/null || true;
+
+#Setup the new zone
 firewall-cmd --new-zone=trash --permanent || true;
 firewall-cmd --zone=trash --set-target=DROP --permanent;
-firewall-cmd --reload;
 
 #Import the IPv4 ipset
-firewall-cmd --permanent --delete-ipset="trash-v4" &>/dev/null || true;
 firewall-cmd --permanent --new-ipset="trash-v4" --type=hash:net --option=maxelem=200000 --option=hashsize=16384 --option=family=inet;
 firewall-cmd --permanent --ipset="trash-v4" --add-entries-from-file=/etc/trash-v4.ipset;
 firewall-cmd --permanent --zone=trash --add-source=ipset:"trash-v4";
 
 #Import the IPv6 ipset
-firewall-cmd --permanent --delete-ipset="trash-v6" &>/dev/null || true;
 firewall-cmd --permanent --new-ipset="trash-v6" --type=hash:net --option=maxelem=200000 --option=hashsize=16384 --option=family=inet6;
 firewall-cmd --permanent --ipset="trash-v6" --add-entries-from-file=/etc/trash-v6.ipset;
 firewall-cmd --permanent --zone=trash --add-source=ipset:"trash-v6";
 
-#Deploy
-firewall-cmd --reload;
+#Reload to apply
+time firewall-cmd --reload;
+echo "[trash] Loaded";

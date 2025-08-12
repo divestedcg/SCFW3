@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250219-01
+#VERSION: 20250812-00
 #
 #Copyright (c) 2021-2024 Divested Computing Group
 #
@@ -231,18 +231,19 @@ loadLists() {
 	#Remove old lists+zone
 	firewall-cmd --delete-zone=scfw --permanent &>/dev/null || true;
 	firewall-cmd --permanent --delete-ipset="scfw3-combined" &>/dev/null || true;
-	firewall-cmd --reload;
 
-	#Import the combined ipset
+	#Setup the new zone
 	#https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/sec-setting_and_controlling_ip_sets_using_firewalld
 	firewall-cmd --new-zone=scfw --permanent;
 	firewall-cmd --zone=scfw --set-target=DROP --permanent;
+
+	#Import the IPv4 ipset
 	firewall-cmd --permanent --new-ipset="scfw3-combined" --type=hash:net --option=maxelem=600000 --option=hashsize=16384 --option=family=inet;
 	firewall-cmd --permanent --ipset="scfw3-combined" --add-entries-from-file="scfw3-combined";
 	firewall-cmd --permanent --zone=scfw --add-source=ipset:"scfw3-combined";
 
 	#Reload to apply
-	firewall-cmd --reload;
+	time firewall-cmd --reload;
 	echo "[SCFW3] Loaded";
 }
 
