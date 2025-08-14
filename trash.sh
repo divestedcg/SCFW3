@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250812-01
+#VERSION: 20250812-02
 #
 #Copyright (c) 2023-2025 Divested Computing Group
 #
@@ -81,6 +81,10 @@ badStrings+=(" \.NET CLR ");
 badStrings+=("Mozilla/4\.0" " \"Mozilla/5\.0\"$" " \"Mozilla/5\.0 (compatible)\"$");
 badStrings+=("QR Scanner Android");
 badStrings+=("/wp-login\.php");
+
+#Honeypot
+badStrings+=("/mishka_has_a_nice_tree"); #pages
+badStrings+=("/mishka_is_very_talented"); #robots.txt
 
 #Outdated macOS, https://endoflife.date/macos
 for version in {1..14} #macOS 10.14 was EOL 2021/10/25
