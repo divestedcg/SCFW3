@@ -46,7 +46,7 @@ blockedLists+=('ipthreat.ipset');
 blockedLists+=('myip.ipset');
 blockedLists+=('php_commenters_30d.ipset' 'php_dictionary_30d.ipset' 'php_harvesters_30d.ipset' 'php_spammers_30d.ipset');
 blockedLists+=('sblam.ipset');
-blockedLists+=('snort.ipset');
+#blockedLists+=('snort.ipset');
 if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('socks_proxy_30d.ipset'); fi;
 blockedLists+=('spamhaus_drop.netset');
 blockedLists+=('spamhaus_edrop.netset');
