@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#VERSION: 20250812-00
+#VERSION: 20250815-00
 #
-#Copyright (c) 2021-2024 Divested Computing Group
+#Copyright (c) 2021-2025 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU Affero General Public License as published by
@@ -144,6 +144,7 @@ prepareExclusions() {
 
 removeAllowedEntries() {
 	wc -l "$1";
+	#TODO: replace both of these grep calls with a single call with two exclusion files passed
 	if [ -f /tmp/scfw3/exclusions.grep ]; then
 		if [ "$SCFW_EXCLUDE_TOR" = true ] || [ "$SCFW_EXCLUDE_VPN" = true ]; then
 			mv "$1" "$1.orig";

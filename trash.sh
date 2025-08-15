@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250812-02
+#VERSION: 20250815-00
 #
 #Copyright (c) 2023-2025 Divested Computing Group
 #
@@ -130,12 +130,17 @@ do
 	fi;
 done
 
+#Generate the pattern file
+rm /tmp/trash-patterns.grep &>/dev/null || true;
+for badString in "${badStrings[@]}"
+do
+	echo "$badString" >> /tmp/trash-patterns.grep;
+done
+
 #Search for the trash in Apache logs
 if [ -d "/var/log/httpd/" ]; then
-	for badString in "${badStrings[@]}"
-	do
-		mapfile -t -O "${#trash[@]}" trash < <( grep -a -i "$badString" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
-	done
+	#Filter out known bad patterns
+	mapfile -t -O "${#trash[@]}" trash < <( grep -a -i -f /tmp/trash-patterns.grep /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
 
 	#Filter out all non HEAD & GET requests
 	mapfile -t -O "${#trash[@]}" trash < <( grep -a -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
