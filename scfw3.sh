@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250815-00
+#VERSION: 20250821-00
 #
 #Copyright (c) 2021-2025 Divested Computing Group
 #
@@ -59,6 +59,7 @@ if [ "$SCFW_BLOCK_VPN" = true ]; then blockedLists+=('vpn_x.ipset'); fi;
 blockedLists+=('vxvault.ipset');
 if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('xroxy_30d.ipset'); fi;
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
+blockedLists+=('anubis_alibaba_cloud.ipset' 'anubis_huawei_cloud.ipset');
 #<25k entries
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
@@ -93,7 +94,10 @@ importList() {
 	url=$2;
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
 	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
-	if [[ "$list" == "cybercure.ipset" ]]; then
+	if [[ "$list" == "anubis_alibaba_cloud.ipset" ]] || [[ "$list" == "anubis_huawei_cloud.ipset" ]]; then
+		#Download, filter, strip IPv6 addresses + whitespace
+		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | grep "    - " | sed 's/.*- //' | grep -v -e ":" -e '^[[:space:]]*$' >> "scfw3-combined";
+	elif [[ "$list" == "cybercure.ipset" ]]; then
 		#Download, replace commas with newlines, strip IPv6 addresses + comments + whitespace
 		/usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 -O - "$url" | sed 's/,/\n/g' | grep -v -e ":" -e '^#' -e '^[[:space:]]*$' >> "scfw3-combined";
 	elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
@@ -180,7 +184,11 @@ loadLists() {
 	#Download the lists
 	for list in "${blockedLists[@]}"
 	do
-		if [[ "$list" == "cinscore.ipset" ]]; then
+		if [[ "$list" == "anubis_alibaba_cloud.ipset" ]]; then
+			importList "$list" "https://raw.githubusercontent.com/TecharoHQ/anubis/refs/heads/main/data/crawlers/alibaba-cloud.yaml";
+		elif [[ "$list" == "anubis_huawei_cloud.ipset" ]]; then
+			importList "$list" "https://raw.githubusercontent.com/TecharoHQ/anubis/refs/heads/main/data/crawlers/huawei-cloud.yaml";
+		elif [[ "$list" == "cinscore.ipset" ]]; then
 			importList "$list" "https://cinsscore.com/list/ci-badguys.txt";
 		elif [[ "$list" == "cybercure.ipset" ]]; then
 			importList "$list" "https://api.cybercure.ai/feed/get_ips?type=csv";
