@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250815-00
+#VERSION: 20250918-00
 #
 #Copyright (c) 2023-2025 Divested Computing Group
 #
@@ -102,7 +102,8 @@ done
 for version in {1..130} #Chrome 130 reached stable on 2024/10/15
 do
 	#Exclude:
-	#LTS: 126
+	#Next LTS: 138
+	#Current LTS: 132 until October 2025
 	#49: last version for Windows XP/Vista
 	#81: last version for Android KitKat (4), https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
 	#95: last version for Android Lolipop (5), https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
@@ -110,7 +111,7 @@ do
 	#109: last version for Windows 7/8
 	#119: last version for Android Nougat (7), https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
 	#138: last version for Android Oreo (8) & Pie (9), https://groups.google.com/a/chromium.org/g/chromium-dev/c/vEZz0721rUY
-	if [[ $version != "126" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
+	if [[ $version != "132" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done
@@ -119,13 +120,13 @@ done
 for version in {1..130} #Firefox 130 reached stable on 2024/09/03
 do
 	#Exclude:
-	#Next ESR: 140
-	#Current ESR: 128
-	#Previous two ESR: 115, 102
+	#Next ESR: 153
+	#Current ESR: 140 until October 2026
+	#Previous two ESR: 128, 115
 	#115: last version for Windows 7/8, https://support.mozilla.org/en-US/kb/firefox-users-windows-7-8-and-81-moving-extended-support
 	#68: last version for Android KitKat (4)
 	#52: last version for Windows XP/Vista, https://support.mozilla.org/en-US/kb/end-support-windows-xp-and-vista
-	if [[ $version != "140" ]] && [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "102" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
+	if [[ $version != "153" ]] && [[ $version != "140" ]] && [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
