@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20250918-00
+#VERSION: 20251016-00
 #
 #Copyright (c) 2023-2025 Divested Computing Group
 #
@@ -123,10 +123,11 @@ do
 	#Next ESR: 153
 	#Current ESR: 140 until October 2026
 	#Previous two ESR: 128, 115
+	#143: last version for Android 7
 	#115: last version for Windows 7/8, https://support.mozilla.org/en-US/kb/firefox-users-windows-7-8-and-81-moving-extended-support
 	#68: last version for Android KitKat (4)
 	#52: last version for Windows XP/Vista, https://support.mozilla.org/en-US/kb/end-support-windows-xp-and-vista
-	if [[ $version != "153" ]] && [[ $version != "140" ]] && [[ $version != "128" ]] && [[ $version != "115" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
+	if [[ $version != "153" ]] && [[ $version != "140" ]] && [[ $version != "128" ]] && [[ $version != "143" ]] && [[ $version != "115" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
