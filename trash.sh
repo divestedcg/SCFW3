@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#VERSION: 20251016-00
+#VERSION: 20260915-00
 #
-#Copyright (c) 2023-2025 Divested Computing Group
+#Copyright (c) 2023-2026 Divested Computing Group
 #
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU Affero General Public License as published by
@@ -91,12 +91,14 @@ for version in {1..14} #macOS 10.14 was EOL 2021/10/25
 do
 	badStrings+=("Macintosh; Intel Mac OS X 10_$version""_");
 done
+unset version;
 
 #Outdated iOS, https://endoflife.date/ios
 for version in {1..14} #iOS 14 was EOL 2021/10/01
 do
 	badStrings+=("iPhone OS $version""_");
 done
+unset version;
 
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
 for version in {1..130} #Chrome 130 reached stable on 2024/10/15
@@ -115,6 +117,7 @@ do
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done
+unset version;
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
 for version in {1..130} #Firefox 130 reached stable on 2024/09/03
@@ -131,22 +134,26 @@ do
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
+unset version;
 
 #Generate the pattern file
-rm /tmp/trash-patterns.grep &>/dev/null || true;
+tempPatterns="$(mktemp)";
 for badString in "${badStrings[@]}"
 do
-	echo "$badString" >> /tmp/trash-patterns.grep;
+	echo "$badString" >> "$tempPatterns";
 done
+unset badString;
 
 #Search for the trash in Apache logs
 if [ -d "/var/log/httpd/" ]; then
 	#Filter out known bad patterns
-	mapfile -t -O "${#trash[@]}" trash < <( grep -a -i -f /tmp/trash-patterns.grep /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
+	mapfile -t -O "${#trash[@]}" trash < <( grep -a -i -f "$tempPatterns" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
 
 	#Filter out all non HEAD & GET requests
 	mapfile -t -O "${#trash[@]}" trash < <( grep -a -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
 fi;
+rm -f "$tempPatterns";
+unset tempPatterns;
 
 #Search for the trash in rsyncd logs
 if [ -f "/var/log/rsyncd.log" ]; then
@@ -170,11 +177,12 @@ fi;
 for rubbish in "${trash[@]}"
 do
 	if [[ $rubbish == *":"* ]]; then
-		echo "$rubbish" >> /etc/trash-v6.ipset;
+		echo "$rubbish" | grep -E '^[0-9a-fA-F:]+$' >> /etc/trash-v6.ipset;
 	elif [[ $rubbish == *"."* ]]; then
-		echo "$rubbish" >> /etc/trash-v4.ipset;
+		echo "$rubbish" | grep -E '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(/[0-9]{1,2})?$' >> /etc/trash-v4.ipset;
 	fi
 done
+unset rubbish;
 
 #Ensure they exist, in case there is none of one
 touch /etc/trash-v4.ipset;

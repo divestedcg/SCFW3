@@ -3,7 +3,7 @@ SCFW3
 
 Overview
 --------
-- These are two simple scripts to block known and learned bad addresses.
+- These are two simple scripts to block known V4 and learned bad V4V6 addresses.
 - It is meant to be used on top of firewalld.
 - This is for resource management, not security.
 
