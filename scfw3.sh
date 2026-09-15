@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260915-02
+#VERSION: 20260915-03
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -301,4 +301,4 @@ loadLists() {
 #Just run as expected
 checkAggregator;
 loadLists;
-mv "$resultList" "/tmp/scfw3-combined"; #save for review or other usage
+mv -f "$resultList" "/tmp/scfw3-combined"; #save for review or other usage
