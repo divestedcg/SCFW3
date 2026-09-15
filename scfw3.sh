@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260915-01
+#VERSION: 20260915-02
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -86,6 +86,7 @@ exclusionPatternsTmp="$(mktemp)";
 exclusionPatterns="/etc/scfw-exclusions.grep";
 
 safeDownloader() {
+	#TODO: fix hsts
 	sudo -u nobody /usr/bin/wget -4 --dns-timeout=5 --connect-timeout=15 --read-timeout=60 --quiet --no-local-db --no-use-server-timestamps "$@"
 }
 
@@ -143,13 +144,14 @@ mergeList() {
 			else
 				echo "WARNING: Processed list from $2 exceeds 4MB size limit, ignoring it!";
 			fi;
+			rm -f "$tmpListProcessed";
 		else
 			echo "WARNING: Raw list from $2 exceeds 32MB size limit, ignoring it!";
 		fi;
 	else
 		echo "ERROR: Failed to download list from $2";
 	fi;
-	rm -f "$tmpListRaw" "$tmpListProcessed";
+	rm -f "$tmpListRaw";
 	unset list url tmpListRaw tmpListProcessed;
 }
 
@@ -175,6 +177,7 @@ prepareExclusions() {
 		rm -f "$exclusionPatternsRawTmp";
 		echo "Entries in generated exclusion pattern file: $(wc --lines --total=only "$exclusionPatternsTmp")";
 	fi;
+	unset exclusionPatternsRawTmp;
 }
 
 removeAllowedEntries() {
