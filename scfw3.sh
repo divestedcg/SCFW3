@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260915-03
+#VERSION: 20260915-04
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -165,7 +165,7 @@ prepareExclusions() {
 	local exclusionPatternsRawTmp;
 	exclusionPatternsRawTmp="$(mktemp)";
 	if [ "$SCFW_BLOCK_TOR" = false ] && [ "$SCFW_EXCLUDE_TOR" = true ]; then
-		mergeList "tor_exits.ipset" "https://iplists.firehol.org/files/tor_exits.ipset" "$exclusionPatternsRawTmp"
+		mergeList "tor_exits.ipset" "https://iplists.firehol.org/files/tor_exits.ipset" "$exclusionPatternsRawTmp";
 	fi;
 	if [ "$SCFW_BLOCK_VPN" = false ] && [ "$SCFW_EXCLUDE_VPN" = true ]; then
 		mergeList "vpn_a.ipset" "https://az0-vpnip-public.oooninja.com/ip.txt" "$exclusionPatternsRawTmp";
@@ -206,16 +206,16 @@ removeAllowedEntries() {
 }
 
 checkAggregator() {
-	local hash="ab462f35079646b25c4e0bdeb329d0c49b8a498a2a3efb8449ccafbab0ccb8edbd88e27e20b6875ee121384ffe337bb15741cc77fc2d3a79de03518640f60d4f"
+	local hash="ab462f35079646b25c4e0bdeb329d0c49b8a498a2a3efb8449ccafbab0ccb8edbd88e27e20b6875ee121384ffe337bb15741cc77fc2d3a79de03518640f60d4f";
 	if [ -f "$aggregator" ]; then
 		if echo -n "$hash  $aggregator" | sha512sum --check --quiet; then
 			return 0;
 		else
-			echo "ERROR: ip-aggregator.py found with invalid hash!"
+			echo "ERROR: ip-aggregator.py found with invalid hash!";
 			exit 1;
 		fi
 	else
-		echo "ERROR: ip-aggregator.py not found!"
+		echo "ERROR: ip-aggregator.py not found!";
 		exit 1;
 	fi;
 }

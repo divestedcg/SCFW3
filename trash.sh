@@ -101,11 +101,11 @@ done
 unset version;
 
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
-for version in {1..130} #Chrome 130 reached stable on 2024/10/15
+for version in {1..149} #Chrome 150 reached stable on 2026-06-02
 do
 	#Exclude:
-	#Next LTS: 138
-	#Current LTS: 132 until October 2025
+	#Current LTS: 144 until October 2026
+	#Next LTS: 150 until at least December 2026
 	#49: last version for Windows XP/Vista
 	#81: last version for Android KitKat (4), https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
 	#95: last version for Android Lolipop (5), https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
@@ -113,24 +113,24 @@ do
 	#109: last version for Windows 7/8
 	#119: last version for Android Nougat (7), https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
 	#138: last version for Android Oreo (8) & Pie (9), https://groups.google.com/a/chromium.org/g/chromium-dev/c/vEZz0721rUY
-	if [[ $version != "132" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
+	if [[ $version != "150" ]] && [[ $version != "144" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done
 unset version;
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
-for version in {1..130} #Firefox 130 reached stable on 2024/09/03
+for version in {1..152} #Firefox 152 reached stable on 2026-06-16
 do
 	#Exclude:
-	#Next ESR: 153
-	#Current ESR: 140 until October 2026
-	#Previous two ESR: 128, 115
+	#Next ESR: ?
+	#Current ESR: 153 until at least January 2027
+	#Previous ESR: 140 until October 2026
 	#143: last version for Android 7
 	#115: last version for Windows 7/8, https://support.mozilla.org/en-US/kb/firefox-users-windows-7-8-and-81-moving-extended-support
 	#68: last version for Android KitKat (4)
 	#52: last version for Windows XP/Vista, https://support.mozilla.org/en-US/kb/end-support-windows-xp-and-vista
-	if [[ $version != "153" ]] && [[ $version != "140" ]] && [[ $version != "128" ]] && [[ $version != "143" ]] && [[ $version != "115" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
+	if [[ $version != "153" ]] && [[ $version != "140" ]] && [[ $version != "143" ]] && [[ $version != "115" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
@@ -179,7 +179,7 @@ do
 	if [[ $rubbish == *":"* ]]; then
 		echo "$rubbish" | grep -E '^[0-9a-fA-F:]+$' >> /etc/trash-v6.ipset;
 	elif [[ $rubbish == *"."* ]]; then
-		echo "$rubbish" | grep -E '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(/[0-9]{1,2})?$' >> /etc/trash-v4.ipset;
+		echo "$rubbish" | grep -E '^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$' >> /etc/trash-v4.ipset;
 	fi
 done
 unset rubbish;
