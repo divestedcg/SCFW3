@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260915-04
+#VERSION: 20260916-01
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -91,6 +91,7 @@ safeDownloader() {
 }
 
 genericCleanLine() {
+	#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
 	#strip IPv6 addresses + comments + whitespace + hyphenated ranges
 	grep -v -e ":" -e '^#' -e '^[[:space:]]*$' -e "-" "$@"
 }
@@ -108,8 +109,6 @@ mergeList() {
 	tmpListProcessed="$(mktemp)";
 	if safeDownloader -O "$tmpListRaw" "$url"; then
 		if [ "$(stat -c%s "$tmpListRaw")" -lt "33554432" ]; then
-			#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/3432574
-			#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
 			if [[ "$list" == "anubis_alibaba_cloud.ipset" ]] || [[ "$list" == "anubis_huawei_cloud.ipset" ]]; then
 				#filter, generic
 				grep "    - " "$tmpListRaw" | sed 's/.*- //' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
@@ -120,6 +119,7 @@ mergeList() {
 				#decompress, filter first column, generic
 				zcat "$tmpListRaw" | awk '{print $1}' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
 			elif [[ "$list" == "threatview.ipset" ]]; then
+				#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
 				#generic, strip leading zeroes in addresses
 				genericCleanLine "$tmpListRaw" | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' | validateLineV4 >> "$tmpListProcessed";
 			elif [[ "$list" == "turrissentinel.ipset" ]]; then
@@ -132,8 +132,9 @@ mergeList() {
 				#skip first line, filter first column
 				tail -n +2 "$tmpListRaw" | sed 's/,.*//' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
 			elif [[ "$list" == "feodo.ipset" ]]; then
+				#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/2613834
 				#convert lines, generic
-				cat "$tmpListRaw" | dos2unix | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
+				cat "$tmpListRaw" | tr -d '\015' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
 			else
 				#generic
 				genericCleanLine "$tmpListRaw" | validateLineV4 >> "$tmpListProcessed";
