@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260916-01
+#VERSION: 20260922-00
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -121,7 +121,7 @@ mergeList() {
 			elif [[ "$list" == "threatview.ipset" ]]; then
 				#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
 				#generic, strip leading zeroes in addresses
-				genericCleanLine "$tmpListRaw" | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//' | validateLineV4 >> "$tmpListProcessed";
+				genericCleanLine "$tmpListRaw" | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//;' | validateLineV4 >> "$tmpListProcessed";
 			elif [[ "$list" == "turrissentinel.ipset" ]]; then
 				#skip first two lines, filter first column, generic
 				tail -n +3 "$tmpListRaw" | sed 's/,.*//' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
@@ -174,7 +174,7 @@ prepareExclusions() {
 		mergeList "vpn_x.ipset" "https://github.com/X4BNet/lists_vpn/raw/main/output/vpn/ipv4.txt" "$exclusionPatternsRawTmp";
 	fi;
 	if [ -f "$exclusionPatternsRawTmp" ]; then
-		cat "$exclusionPatternsRawTmp" | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' | sort -u > "$exclusionPatternsTmp";
+		cat "$exclusionPatternsRawTmp" | sed 's/\./\\./g; s/^/\^/; s/$/\$/;' | sort -u > "$exclusionPatternsTmp";
 		rm -f "$exclusionPatternsRawTmp";
 		echo "Entries in generated exclusion pattern file: $(wc --lines --total=only "$exclusionPatternsTmp")";
 	fi;

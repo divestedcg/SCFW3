@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260915-00
+#VERSION: 20260922-00
 #
 #Copyright (c) 2023-2026 Divested Computing Group
 #
@@ -157,7 +157,7 @@ unset tempPatterns;
 
 #Search for the trash in rsyncd logs
 if [ -f "/var/log/rsyncd.log" ]; then
-	mapfile -t -O "${#trash[@]}" trash < <( grep -a denied /var/log/rsyncd.log | awk '{ print $11 } ' | sort -u | sed 's/(//' | sed 's/)//' );
+	mapfile -t -O "${#trash[@]}" trash < <( grep -a denied /var/log/rsyncd.log | awk '{ print $11 } ' | sort -u | sed 's/(//; s/)//;' );
 fi;
 
 #Search for the trash in murmur logs
@@ -195,7 +195,7 @@ sort -u -o /etc/trash-v6.ipset /etc/trash-v6.ipset;
 #Remove exclusions
 if [ -f /etc/scfw-exclusions.grep ]; then
 	if [ -f "/usr/lib/systemd/system/sshd.service" ]; then
-		journalctl -u sshd.service | grep -e "Accepted keyboard-interactive/pam for root from " | awk '{ print $11 } ' | sort -u | sed 's/\./\\./g' | sed 's/^/\^/' | sed 's/$/\$/' >> /etc/scfw-exclusions.grep;
+		journalctl -u sshd.service | grep -e "Accepted keyboard-interactive/pam for root from " | awk '{ print $11 } ' | sort -u | sed 's/\./\\./g; s/^/\^/; s/$/\$/;' >> /etc/scfw-exclusions.grep;
 		sort -u -o /etc/scfw-exclusions.grep /etc/scfw-exclusions.grep;
 	fi;
 
