@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260922-00
+#VERSION: 20260928-00
 #
 #Copyright (c) 2023-2026 Divested Computing Group
 #
@@ -51,7 +51,7 @@ badStrings+=("httrack");
 
 #Other Allowed
 #badStrings+=("xarantolus/filtrite-list");
-#badStrings+=("Hypatia");
+#badStrings+=("Hypatia" "/MalwareScannerSignatures/");
 #badStrings+=("com\.machiav3lli\.fdroid-" "com\.machiav3lli.\fdroid\.neo-");
 #badStrings+=("pfSense/pfBlockerNG");
 
@@ -80,7 +80,7 @@ badStrings+=("Trident/");
 badStrings+=(" \.NET CLR ");
 badStrings+=("Mozilla/4\.0" " \"Mozilla/5\.0\"$" " \"Mozilla/5\.0 (compatible)\"$");
 badStrings+=("QR Scanner Android");
-badStrings+=("/wp-login\.php");
+badStrings+=("/wp-login\.php" "/wp-includes/");
 
 #Honeypot
 badStrings+=("/mishka_has_a_nice_tree"); #pages

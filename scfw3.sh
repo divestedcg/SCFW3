@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260922-00
+#VERSION: 20261009-00
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -55,7 +55,7 @@ if [ "$SCFW_BLOCK_VPN" = true ]; then blockedLists+=('vpn_x.ipset'); fi;
 blockedLists+=('vxvault.ipset');
 if [ "$SCFW_BLOCK_PROXY" = true ]; then blockedLists+=('xroxy_30d.ipset'); fi;
 if [ "$SCFW_BLOCK_TOR" = true ]; then blockedLists+=('dm_tor.ipset' 'et_tor.ipset' 'iblocklist_onion_router.netset' 'tor_exits.ipset'); fi;
-blockedLists+=('anubis_alibaba_cloud.ipset' 'anubis_huawei_cloud.ipset');
+blockedLists+=('anubis_alibaba_cloud.ipset' 'anubis_huawei_cloud.ipset' 'anubis_tencent_cloud.ipset');
 #<25k entries
 blockedLists+=('botscout_30d.ipset');
 blockedLists+=('cinscore.ipset');
@@ -109,7 +109,7 @@ mergeList() {
 	tmpListProcessed="$(mktemp)";
 	if safeDownloader -O "$tmpListRaw" "$url"; then
 		if [ "$(stat -c%s "$tmpListRaw")" -lt "33554432" ]; then
-			if [[ "$list" == "anubis_alibaba_cloud.ipset" ]] || [[ "$list" == "anubis_huawei_cloud.ipset" ]]; then
+			if [[ "$list" == "anubis_alibaba_cloud.ipset" ]] || [[ "$list" == "anubis_huawei_cloud.ipset" ]] || [[ "$list" == "anubis_tencent_cloud.ipset" ]]; then
 				#filter, generic
 				grep "    - " "$tmpListRaw" | sed 's/.*- //' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
 			elif [[ "$list" == "iblocklist_spyware.ipset" ]]; then
@@ -235,6 +235,8 @@ loadLists() {
 			mergeList "$list" "https://raw.githubusercontent.com/TecharoHQ/anubis/refs/heads/main/data/crawlers/alibaba-cloud.yaml" "$resultList";
 		elif [[ "$list" == "anubis_huawei_cloud.ipset" ]]; then
 			mergeList "$list" "https://raw.githubusercontent.com/TecharoHQ/anubis/refs/heads/main/data/crawlers/huawei-cloud.yaml" "$resultList";
+		elif [[ "$list" == "anubis_tencent_cloud.ipset" ]]; then
+			mergeList "$list" "https://raw.githubusercontent.com/TecharoHQ/anubis/refs/heads/main/data/crawlers/tencent-cloud.yaml" "$resultList";
 		elif [[ "$list" == "cinscore.ipset" ]]; then
 			mergeList "$list" "https://cinsscore.com/list/ci-badguys.txt" "$resultList";
 		elif [[ "$list" == "feodo.ipset" ]]; then
