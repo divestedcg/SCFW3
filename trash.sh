@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20260928-00
+#VERSION: 20261010-02
 #
 #Copyright (c) 2023-2026 Divested Computing Group
 #
@@ -16,6 +16,23 @@
 #
 #You should have received a copy of the GNU Affero General Public License
 #along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+aggregator="/usr/local/bin/ip-aggregator.py";
+checkAggregator() {
+	local hash="ab462f35079646b25c4e0bdeb329d0c49b8a498a2a3efb8449ccafbab0ccb8edbd88e27e20b6875ee121384ffe337bb15741cc77fc2d3a79de03518640f60d4f";
+	if [ -f "$aggregator" ]; then
+		if echo -n "$hash  $aggregator" | sha512sum --check --quiet; then
+			return 0;
+		else
+			echo "ERROR: ip-aggregator.py found with invalid hash!";
+			exit 1;
+		fi
+	else
+		echo "ERROR: ip-aggregator.py not found!";
+		exit 1;
+	fi;
+}
+checkAggregator;
 
 #Known bad, some sourced from BlockBotAddon (3-clause BSD license): https://git.friendi.ca/friendica/friendica-addons/src/branch/develop/blockbot/blockbot.php
 badStrings=("360Spider" "7Siters/" "adscanner/" "AHC/" "AhrefsBot/" "ALittle Client" "AwarioRssBot/" "AwarioSmartBot/" "axios/" "Barkrowler/" "BLEXBot/" "BoardReader Favicon Fetcher" "brainstorm" "Cliqzbot/" "Cloud mapping experiment" "CrowdTanglebot/" "datagnionbot" "dataminr\.com" "Datanyze" "Dataprovider\.com" "dcrawl/" "DecompilationBot/" "Diffbot/" "DNSResearchBot/" "DomainStatsBot/" "DotBot/" "EdgeWatch/" "Embed PHP library" "evc-batch/" "Exabot/" "FemtosearchBot/" "FunWebProducts" "GetHPinfo\.com-Bot/" "GigablastOpenSource/" "Google-Adwords-Instant" "Hatena-Favicon/" "heritrix/" "HTTP Banner Detection" "HubSpot Crawler" "IndieWebCards/" "InfoTigerBot/" "InternetMeasurement/" "Jooblebot/" "kirkland-signature" "KOCMOHABT" "ldspider" "linkdexbot/" "linkfluence\.com" "LivelapBot/" "ltx71" "Lucifer Search Bot" "lychee/" "Mediapartners-Google" "Mediatoolkitbot" "Mediumbot-MetaTagFetcher/" "MegaIndex\.ru/" "MetaInspector/" "MJ12bot/" "NetcraftSurveyAgent/" "netEstate NE Crawler" "newspaper/" "Nextcloud Server Crawler" "Nimbostratus-Bot/" "Nuzzel" "oBot/" "onionlandsearchengine/" "opensiteexplorer" "PaperLiBot/" "pdrlabs" "PetalBot;" "Pinterestbot/" "proximic;" "Qwantify/Bleriot/" "Re-re Studio" "SaaSHub" "SabsimBot/" "Scrapy/" "SeekportBot;" "Seekport Crawler;" "Semanticbot/" "SemrushBot" "SemrushBot-BA;" "SEOkicks;" "s~feedly-nikon3" "SMTBot/" "SMUrlExpander" "Snacktory" "Sogou web spider/" "Spawning-AI" "startmebot/" "StractBot/" "SummalyBot/" "SurdotlyBot/" "TrendsmapResolver/" "TweetmemeBot/" "um-LN/" "Wappalyzer" "WbSrch/" "webprosbot/" "woorankreview/" "WordPress/" "wpif" "XoviOnpageCrawler;" "YaK/" "Yeti/" "YisouSpider" "YurichevBot/" "ZaldamoSearchBot" "zgrab/" "zoominfobot" "fidget-spinner-bot" "Timpibot/" "AntBot" "test-bot" "2ip bot/" "Bytespider;");
@@ -147,10 +164,10 @@ unset badString;
 #Search for the trash in Apache logs
 if [ -d "/var/log/httpd/" ]; then
 	#Filter out known bad patterns
-	mapfile -t -O "${#trash[@]}" trash < <( grep -a -i -f "$tempPatterns" /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
+	mapfile -t -O "${#trash[@]}" trash < <( grep -a -i -f "$tempPatterns" /var/log/httpd/access_log -h | awk '{ print $1 } ' | sort -u );
 
 	#Filter out all non HEAD & GET requests
-	mapfile -t -O "${#trash[@]}" trash < <( grep -a -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log* -h | awk '{ print $1 } ' | sort -u );
+	mapfile -t -O "${#trash[@]}" trash < <( grep -a -v -e "] \"GET " -e "] \"HEAD " /var/log/httpd/access_log -h | awk '{ print $1 } ' | sort -u );
 fi;
 rm -f "$tempPatterns";
 unset tempPatterns;
@@ -210,6 +227,15 @@ fi;
 
 #Fixups
 sed -i '/^127\.0\.0\.1$/d' /etc/trash-v4.ipset;
+
+#Aggregate
+if [ -f "$aggregator" ]; then
+	echo "Entries before aggregation: $(wc --lines --total=only "/etc/trash-v4.ipset")";
+	mv "/etc/trash-v4.ipset" "/etc/trash-v4.ipset.orig";
+	cat "/etc/trash-v4.ipset.orig" | python3 "$aggregator" --stdin --quiet --sort > "/etc/trash-v4.ipset";
+	rm "/etc/trash-v4.ipset.orig";
+	echo "Entries after aggregation: $(wc --lines --total=only "/etc/trash-v4.ipset")";
+fi;
 
 #Print a count
 wc -l /etc/trash-*.ipset
