@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20261009-00
+#VERSION: 20261014-00
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -70,6 +70,7 @@ blockedLists+=('ciarmy.ipset');
 #<100k entries
 blockedLists+=('voipbl.ipset');
 #<150k entries
+blockedLists+=('abuseipdb-s100-30d.ipset');
 blockedLists+=('blocklist_net_ua.ipset');
 #blockedLists+=('stopforumspam.ipset');
 #<300k entries
@@ -135,6 +136,9 @@ mergeList() {
 				#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/2613834
 				#convert lines, generic
 				cat "$tmpListRaw" | tr -d '\015' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
+			elif [[ "$list" == "abuseipdb-s100-30d.ipset" ]]; then
+				#filter first column, generic
+				cat "$tmpListRaw" |  awk '{print $1}' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
 			else
 				#generic
 				genericCleanLine "$tmpListRaw" | validateLineV4 >> "$tmpListProcessed";
@@ -231,7 +235,9 @@ loadLists() {
 	#Download the lists
 	for list in "${blockedLists[@]}"
 	do
-		if [[ "$list" == "anubis_alibaba_cloud.ipset" ]]; then
+		if [[ "$list" == "abuseipdb-s100-30d.ipset" ]]; then
+			mergeList "$list" "https://raw.githubusercontent.com/borestad/blocklist-abuseipdb/refs/heads/main/abuseipdb-s100-30d.ipv4" "$resultList";
+		elif [[ "$list" == "anubis_alibaba_cloud.ipset" ]]; then
 			mergeList "$list" "https://raw.githubusercontent.com/TecharoHQ/anubis/refs/heads/main/data/crawlers/alibaba-cloud.yaml" "$resultList";
 		elif [[ "$list" == "anubis_huawei_cloud.ipset" ]]; then
 			mergeList "$list" "https://raw.githubusercontent.com/TecharoHQ/anubis/refs/heads/main/data/crawlers/huawei-cloud.yaml" "$resultList";
