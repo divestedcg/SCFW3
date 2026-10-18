@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20261014-00
+#VERSION: 20261018-00
 #
 #Copyright (c) 2021-2026 Divested Computing Group
 #
@@ -20,7 +20,7 @@
 export SCFW_BLOCK_PROXY=true; #Junk proxies
 export SCFW_BLOCK_TOR=false; #Tor exits and other nodes
 export SCFW_BLOCK_VPN=false; #Common VPN providers
-export SCFW_EXCLUDE_TOR=true; #Explicitly exempt Tor nodes
+export SCFW_EXCLUDE_TOR=true; #Explicitly exempt Tor exit nodes
 export SCFW_EXCLUDE_VPN=true; #Explicitly exempt common VPN providers
 
 #Lists
@@ -170,6 +170,9 @@ prepareExclusions() {
 	local exclusionPatternsRawTmp;
 	exclusionPatternsRawTmp="$(mktemp)";
 	if [ "$SCFW_BLOCK_TOR" = false ] && [ "$SCFW_EXCLUDE_TOR" = true ]; then
+		#mergeList "dm_tor.ipset" "https://iplists.firehol.org/files/dm_tor.ipset" "$exclusionPatternsRawTmp";
+		#mergeList "et_tor.ipset" "https://iplists.firehol.org/files/et_tor.ipset" "$exclusionPatternsRawTmp";
+		#mergeList "iblocklist_onion_router.netset" "https://iplists.firehol.org/files/iblocklist_onion_router.netset" "$exclusionPatternsRawTmp";
 		mergeList "tor_exits.ipset" "https://iplists.firehol.org/files/tor_exits.ipset" "$exclusionPatternsRawTmp";
 	fi;
 	if [ "$SCFW_BLOCK_VPN" = false ] && [ "$SCFW_EXCLUDE_VPN" = true ]; then
