@@ -121,7 +121,7 @@ mergeList() {
 				zcat "$tmpListRaw" | awk '{print $1}' | genericCleanLine | validateLineV4 >> "$tmpListProcessed";
 			elif [[ "$list" == "threatview.ipset" ]]; then
 				#Credit (CC BY-SA 4.0): https://stackoverflow.com/a/60741627
-				#generic, strip leading zeroes in addresses
+				#generic, strip leading zeroes in addresses #XXX: this breaks some entries
 				genericCleanLine "$tmpListRaw" | sed -E 's/\.0*([1-9])/\.\1/g; s/^0*//;' | validateLineV4 >> "$tmpListProcessed";
 			elif [[ "$list" == "turrissentinel.ipset" ]]; then
 				#skip first two lines, filter first column, generic
