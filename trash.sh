@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#VERSION: 20261010-02
+#VERSION: 20261110-00
 #
 #Copyright (c) 2023-2026 Divested Computing Group
 #
@@ -118,11 +118,10 @@ done
 unset version;
 
 #Outdated Chromium, https://chromiumdash.appspot.com/schedule
-for version in {1..149} #Chrome 150 reached stable on 2026-06-02
+for version in {1..155} #Chrome 155 reached stable on 2026-10-06
 do
 	#Exclude:
-	#Current LTS: 144 until October 2026
-	#Next LTS: 150 until at least December 2026
+	#Extended: 150 (previous), 156 (current), 160 (next)
 	#49: last version for Windows XP/Vista
 	#81: last version for Android KitKat (4), https://groups.google.com/a/chromium.org/g/chromium-dev/c/p1nOzmB2zig
 	#95: last version for Android Lolipop (5), https://groups.google.com/a/chromium.org/g/chromium-dev/c/2MwR9KqwY9I
@@ -130,24 +129,23 @@ do
 	#109: last version for Windows 7/8
 	#119: last version for Android Nougat (7), https://groups.google.com/a/chromium.org/g/chromium-dev/c/B9AYI3WAvRo
 	#138: last version for Android Oreo (8) & Pie (9), https://groups.google.com/a/chromium.org/g/chromium-dev/c/vEZz0721rUY
-	if [[ $version != "150" ]] && [[ $version != "144" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
+	if [[ $version != "160" ]] && [[ $version != "156" ]]  && [[ $version != "150" ]] && [[ $version != "49" ]] && [[ $version != "81" ]] && [[ $version != "95" ]] && [[ $version != "106" ]] && [[ $version != "109" ]] && [[ $version != "119" ]] && [[ $version != "138" ]]; then
 		badStrings+=("Chrome/$version\.0\.");
 	fi;
 done
 unset version;
 
 #Outdated Firefox, https://whattrainisitnow.com/calendar/
-for version in {1..152} #Firefox 152 reached stable on 2026-06-16
+for version in {1..157} #Firefox 157 reached stable on 2026-09-29
 do
 	#Exclude:
-	#Next ESR: ?
-	#Current ESR: 153 until at least January 2027
-	#Previous ESR: 140 until October 2026
+	#Next ESR: 175 until at least February 2028
+	#Current ESR: 153 until at least September 2027
 	#143: last version for Android 7
 	#115: last version for Windows 7/8, https://support.mozilla.org/en-US/kb/firefox-users-windows-7-8-and-81-moving-extended-support
 	#68: last version for Android KitKat (4)
 	#52: last version for Windows XP/Vista, https://support.mozilla.org/en-US/kb/end-support-windows-xp-and-vista
-	if [[ $version != "153" ]] && [[ $version != "140" ]] && [[ $version != "143" ]] && [[ $version != "115" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
+	if [[ $version != "175" ]] && [[ $version != "153" ]] && [[ $version != "143" ]] && [[ $version != "115" ]] && [[ $version != "68" ]] && [[ $version != "52" ]]; then
 		badStrings+=("Firefox/$version\.0");
 	fi;
 done
